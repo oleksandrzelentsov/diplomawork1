@@ -16,4 +16,4 @@ class Term(models.Model):
     name = models.CharField(max_length=128)
     definition = models.TextField()
     category = models.ForeignKey(Category)
-    history = models.ForeignKey(TermHistory, )
+    history = models.ForeignKey(TermHistory, blank=True, null=True)
