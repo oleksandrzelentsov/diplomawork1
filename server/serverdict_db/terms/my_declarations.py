@@ -2,6 +2,7 @@ __author__ = 'Alexander Zelentsov'
 import random
 from django.template.loader import get_template
 from django.template import Context
+from django.http import HttpResponse
 
 lipsum = ["Lorem ipsum dolor sit amet,"
           " consectetur adipiscing elit."
@@ -41,6 +42,18 @@ class NavigationItem:
             "navigation_items": [x.get_html for x in items]
         }, autoescape=False))
 
+    @staticmethod
+    def make_navigation(request, active_number=0):
+        items = [
+            NavigationItem("Домой"),
+            NavigationItem("О нас", href='about'),
+            NavigationItem("Вход" if not request.user.is_authenticated() else "Выход",
+                                           href="login"),
+            NavigationItem("Поиск", href='search')
+        ]
+        items[active_number].active = 'active'
+        return NavigationItem.get_html_for_menu(items)
+
 
 class Article:
 
@@ -59,6 +72,16 @@ class Sidebar:
     def get_html(self):
         return get_template("sidebar.html").render(Context({"sidebar": self}, autoescape=False))
 
+    @staticmethod
+    def get_random_sidebars(count: int):
+        sidebars = ''
+        sidebars = [Sidebar(
+            "Боковая колонка №%i" % (x + 1),
+            random.choice(lipsum)
+        ) for x in range(count)]
+        r = ''.join([x.get_html() for x in sidebars])
+        return r
+
 
 class Message:
     def __init__(self, content):
@@ -66,3 +89,11 @@ class Message:
 
     def get_html(self):
         return get_template("message.html").render(Context({"message": self}, autoescape=False))
+
+
+def get_page(request, main_content='', sidebars='', nav_active_number=0):
+    return HttpResponse(
+        get_template('index.html').render(Context({
+            "Content": main_content,
+            "Navigation": NavigationItem.make_navigation(request, nav_active_number),
+            "Sidebars": sidebars}, autoescape=False)))

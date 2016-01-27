@@ -1,6 +1,8 @@
 <article class="topContent">
 <header>
-    <h2><a href={{ article.href }}>{{ article.title }}</a></h2>
+    <h2>
+        <a href='{{ article.href }}'{% if article.href == '#' %} class='disabled-link'{% endif %}>{{ article.title }}</a>
+    </h2>
 </header>
 
 <footer>

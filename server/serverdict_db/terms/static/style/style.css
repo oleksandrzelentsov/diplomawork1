@@ -35,6 +35,12 @@ a:hover, a:active {
     color: #496D8C;
 }
 
+a.disabled-link {
+    cursor: default;
+    text-decoration: none;
+    color: #00070D;
+}
+
 .body {
     margin: 0 auto;
     width: 70%;

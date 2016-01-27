@@ -22,3 +22,8 @@ class Term(models.Model):
     category = models.ForeignKey(Category)
     history = models.ForeignKey(TermHistory, blank=True, null=True)
     user = models.ForeignKey(User, blank=True, null=True)
+
+
+class APIToken(models.Model):
+    token = models.TextField(primary_key=True)
+    user = models.ForeignKey(User, blank=True, null=True)
