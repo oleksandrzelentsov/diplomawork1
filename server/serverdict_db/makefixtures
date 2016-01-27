@@ -1,0 +1,3 @@
+#!/bin/sh
+python3 manage.py dumpdata --format=json terms > /home/oleksandr/Programming/diplomawork1/server/serverdict_db/fixtures/terms.json
+python3 manage.py dumpdata --format=json auth > /home/oleksandr/Programming/diplomawork1/server/serverdict_db/fixtures/auth.json

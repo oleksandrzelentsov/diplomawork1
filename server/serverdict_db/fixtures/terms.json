@@ -1,0 +1,1 @@
+[{"model": "terms.author", "pk": 1, "fields": {"name": "Oleksandr Zelentsov"}}, {"model": "terms.termhistory", "pk": 1, "fields": {"author": 1, "year": 2016}}, {"model": "terms.category", "pk": 1, "fields": {"name": "Other"}}, {"model": "terms.term", "pk": 1, "fields": {"name": "Test term", "definition": "test definition", "category": 1, "history": 1, "user": 1}}]

@@ -1,0 +1,15 @@
+<label for="q">Search: </label>
+<input type="text" name="q" id="query_text_edit" value="{{ query|escape }}" height="20px">
+<button value="Search" id="submit_btn">Hello!!!</button>
+{% if query %}
+    <h2>Результати пошуку по "{{ query|escape }}":</h2>
+    {% if results %}
+        <ul>
+        {% for order in results %}
+            <li> <a href="/order/{{ order.id }}">{{ order|escape }}</a> </li>
+        {% endfor %}
+        </ul>
+        {% else %}
+            <p>Нема замовлень, що містять "{{ query|escape }}"</p>
+    {% endif %}
+{% endif %}

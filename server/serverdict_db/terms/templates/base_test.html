@@ -1,0 +1,15 @@
+<html>
+<head>
+	{% load staticfiles %}
+	<title>
+		{{ Title }}
+	</title>
+	<link rel="stylesheet" href="{% static "style/style.css" %}" />
+	<style type="text/css">
+		{{ AdditionalCss }}
+	</style>
+</head>
+<body>
+	{{ Content }}
+</body>
+</html>
