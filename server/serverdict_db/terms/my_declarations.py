@@ -2,7 +2,8 @@ __author__ = 'Alexander Zelentsov'
 import random
 from django.template.loader import get_template
 from django.template import Context
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+import urllib.parse as urllib
 
 lipsum = ["Lorem ipsum dolor sit amet,"
           " consectetur adipiscing elit."
@@ -43,15 +44,16 @@ class NavigationItem:
         }, autoescape=False))
 
     @staticmethod
-    def make_navigation(request, active_number=0):
+    def make_navigation(request, active_number=-1):
         items = [
-            NavigationItem("Домой"),
+            NavigationItem("Домой", href='/'),
             NavigationItem("О нас", href='about'),
             NavigationItem("Вход" if not request.user.is_authenticated() else "Выход",
                                            href="login"),
             NavigationItem("Поиск", href='search')
         ]
-        items[active_number].active = 'active'
+        if active_number != -1:
+            items[active_number].active = 'active'
         return NavigationItem.get_html_for_menu(items)
 
 
@@ -79,6 +81,8 @@ class Sidebar:
             "Боковая колонка №%i" % (x + 1),
             random.choice(lipsum)
         ) for x in range(count)]
+        sidebars[0].sidebar_type = 'top-sidebar'
+        sidebars[-1].sidebar_type = 'bottom-sidebar'
         r = ''.join([x.get_html() for x in sidebars])
         return r
 
@@ -91,9 +95,13 @@ class Message:
         return get_template("message.html").render(Context({"message": self}, autoescape=False))
 
 
-def get_page(request, main_content='', sidebars='', nav_active_number=0):
+def get_page(request, main_content='', sidebars='', nav_active_number=-1):
     return HttpResponse(
         get_template('index.html').render(Context({
             "Content": main_content,
             "Navigation": NavigationItem.make_navigation(request, nav_active_number),
             "Sidebars": sidebars}, autoescape=False)))
+
+
+def get_error_page(msg=''):
+    return HttpResponseRedirect('/error?message=%s' % (urllib.quote_plus(msg)))

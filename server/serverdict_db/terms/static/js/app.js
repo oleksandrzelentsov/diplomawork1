@@ -1,5 +1,5 @@
-jQuery(document).ready(function(){
+$(document).ready(function(){
    $('a.disabled-link').click(function () {
        return false;
    });
-})
+});
