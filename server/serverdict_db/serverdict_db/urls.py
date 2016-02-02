@@ -15,11 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from terms import views
+from terms import views, api
 
 urlpatterns = [
 	url(r'^$', views.it_works),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^display/([0-9|A-Z|a-z]*)', views.display),
-    url(r'^template/([0-9|A-Z|a-z]*)', views.template),
+    url(r'^login/', views.login),
+    url(r'^search', views.search),
+    url(r'^error', views.error),
+    # REST API:
+    url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
 ]
