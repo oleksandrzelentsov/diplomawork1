@@ -48,9 +48,8 @@ def error(request):
 def search(request):
 	if request.method == 'GET':
 		return my_declarations.get_error_page('it is GET but it\'s not supposed to work')
-		return
 		if parameters:
-		    pass
+		    pass # yield
 		else:
 			pass
 	else:
