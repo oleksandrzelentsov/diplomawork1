@@ -1,8 +1,7 @@
-FILES = $(find -name *.dia)
+FILES=$(find -name "*.dia")
 
 for file in $FILES
 do
-    dia -e pdf/file.pdf -t pdf
+    name="$(basename $file)"
+    dia -e "pdf/${name%.*}.pdf" -t pdf $file
 done
-
-in 
