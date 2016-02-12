@@ -1,3 +1,5 @@
+#!/bin/sh
+
 FILES=$(find -name "*.dia") # get all filenames with whole paths
 
 for file in $FILES # go through all of these files
