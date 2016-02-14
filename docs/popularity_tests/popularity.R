@@ -6,7 +6,7 @@ make_graph <- function(data) {
     ud <- sort(unique(data))
     plot(1:n, (data[1:n]), type="p")
     lines(1:n, rep(mean(ud), n), col="purple")
-    inc(ud[length(ud)], 50)
+    inc(ud[sample(1:length(ud), 1)], 10)
     lines(1:n, rep(mean(ud), n), col="blue")
     # lines(1:n, rep(mean(data), n), col="red")
 }
@@ -14,7 +14,7 @@ make_graph <- function(data) {
 # cat("Number of terms:\n")
 n <- 10
 # n <- scan("", n=1)
-d <- sample(rep(1:100, each=n/10))
+d <- sample(1:50, n, replace=T)
 # d <- scan("", n=n)
 summary(d)
 make_graph(d)
