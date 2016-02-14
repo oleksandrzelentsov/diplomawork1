@@ -54,3 +54,6 @@ def search(request):
 			pass
 	else:
 		return my_declarations.get_error_page('it\'s not GET and it\'s not supposed to work')
+
+def admin(request):
+	return HttpResponseRedirect('/admin')

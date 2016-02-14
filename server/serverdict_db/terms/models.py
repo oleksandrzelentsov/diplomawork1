@@ -27,10 +27,19 @@ class Term(models.Model):
     author = models.ForeignKey(Author, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     public = models.BooleanField(default=False)
-    accesibility = models.ManyToManyField(User, related_name="granted_users")
+    accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True, null=True)
 
     def __str__(self):
         return self.name + ("[%s]" % self.category)
+
+    @staticmethod
+    def average_popularity(selector=lambda x: True):
+        coll = [x.popularity for x in Term.objects.all() if selector(x)]
+        return sum(coll)/len(coll)
+
+    @staticmethod
+    def private_popularity():
+        return Term.average_popularity(lambda x: not x.public)
 
 
 class APIToken(models.Model):
@@ -38,4 +47,4 @@ class APIToken(models.Model):
     user = models.ForeignKey(User, blank=True, null=True)
 
     def __str__(self):
-        return self.user.first_name
+        return str(self.user)
