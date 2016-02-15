@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 # Create your models here.
 
 
@@ -32,6 +32,22 @@ class Term(models.Model):
     def __str__(self):
         return self.name + ("[%s]" % self.category)
 
+    def grant_access(self, *users):
+        for user in users:
+            if user not in self.accesibility.all() and user is not self.user:
+                self.accesibility.add(user)
+                self.popularity += 1
+                self.save()
+
+    def forbid_access(self, *users):
+        for user in users:
+            if user in self.accesibility.all():
+                self.accesibility.remove(user)
+                self.popularity -= 1
+                self.save()
+            else if user is self.user:
+                self.delete()
+
     @staticmethod
     def average_popularity(selector=lambda x: True):
         coll = [x.popularity for x in Term.objects.all() if selector(x)]
@@ -40,6 +56,15 @@ class Term(models.Model):
     @staticmethod
     def private_popularity():
         return Term.average_popularity(lambda x: not x.public)
+
+    @staticmethod
+    def get_terms(user):
+        result = [x for x in Term.objects.all() if x.public]
+        if isinstance(user, AnonymousUser) or user is None:
+            return result
+        private = [x for x in Term.objects.all() if not x.public]
+        result += [x for x in private if user in x.accesibility.all()]
+        return result
 
 
 class APIToken(models.Model):
