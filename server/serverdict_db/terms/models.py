@@ -30,7 +30,7 @@ class Term(models.Model):
     accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True, null=True)
 
     def __str__(self):
-        return self.name + ("[%s]" % self.category)
+        return self.name + (" [%s]" % self.category)
 
     def grant_access(self, *users):
         for user in users:
@@ -45,7 +45,7 @@ class Term(models.Model):
                 self.accesibility.remove(user)
                 self.popularity -= 1
                 self.save()
-            else if user is self.user:
+            elif user is self.user:
                 self.delete()
 
     @staticmethod
