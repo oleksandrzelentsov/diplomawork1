@@ -1,1 +1,1 @@
-# diplomawork1
+# Term'o'verbal
