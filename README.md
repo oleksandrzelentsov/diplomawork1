@@ -1,9 +1,9 @@
 # Term'o'verbal
 
  * web application written in Django
- * auth
- * term popularity
- * UML
- * tests
+ * [X]auth
+ * [X]term popularity
+ * [X]UML
+ * [X]tests
  * statistics
  * other cool stuff
