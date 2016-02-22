@@ -8,6 +8,7 @@ from terms import my_declarations
 import random
 import django.contrib.auth as auth
 from django.contrib.auth.forms import AuthenticationForm
+from django.views.decorators.csrf import csrf_exempt
 
 
 def it_works(request):
@@ -15,26 +16,16 @@ def it_works(request):
 	main_content += ''.join(my_declarations.Article('Article#%i' % (i + 1), random.choice(my_declarations.lipsum)).get_html() for i in range(10))
 	return my_declarations.get_page(request, main_content, my_declarations.Sidebar.get_random_sidebars(6), 0)
 
-
+@csrf_exempt # kostyl, needs to be figured out why CSRF does'nt work here
 def login(request):
-	if request.method == "POST":
-		form = AuthenticationForm(data=request.POST)
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=username, password=password)
-		if form.is_valid() and user:
-			auth.login(request, user)
-			return HttpResponseRedirect('/')
-		else:
-			return my_declarations.get_error_page('invalid form with data %s:%s' % (username, password))
-	else:
-		form = AuthenticationForm()
-		form_html = get_template('form.html').render(request,
-		{
-		'form': form,
-		'data':
-		{'method': 'post', 'submit_text': 'login', 'action': '/login/'}})
-		return my_declarations.get_page(request, my_declarations.Article('Authentication', form_html).get_html(), my_declarations.Sidebar.get_random_sidebars(2), 2)
+	if request.method not in {'GET', 'POST'}:
+		return my_declarations.get_error_page(msg='this page (%s) is not available using %s method' % (request.path, request.method))
+	if request.method == "GET": # just display the form
+		form = get_template('form_login.html').render({"Navigation": my_declarations.NavigationItem.make_navigation(request, 2)})
+		return HttpResponse(form)
+	elif request.method == "POST": # try to log in
+		return my_declarations.get_error_page(msg='authentication with %s:%s' % (request.POST['username'], request.POST['password']))
+
 
 
 def error(request):

@@ -4,6 +4,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.http import HttpResponse, HttpResponseRedirect
 import urllib.parse as urllib
+from abc import abstractmethod
 
 lipsum = ["Lorem ipsum dolor sit amet,"
           " consectetur adipiscing elit."
@@ -28,8 +29,13 @@ lipsum = ["Lorem ipsum dolor sit amet,"
           " Class aptent taciti sociosqu ad litora torquent per conubia nostra,"
           " per inceptos himenaeos. Donec eget urna id urna porta consectetur vel sed. "]
 
+class Htmlable:
+    @abstractmethod
+    def get_html(self):
+        pass
 
-class NavigationItem:
+
+class NavigationItem(Htmlable):
 
     def __init__(self, text, active="",  href="#"):
         self.text, self.href, self.active = text, href, active
@@ -57,7 +63,7 @@ class NavigationItem:
         return NavigationItem.get_html_for_menu(items)
 
 
-class Article:
+class Article(Htmlable):
 
     def __init__(self, title="", content="", additional_info="", href="#"):
         self.title, self.href, self.content, self.additional_info = title, href, content, additional_info
@@ -66,7 +72,7 @@ class Article:
         return get_template("article.html").render(Context({"article": self}, autoescape=False))
 
 
-class Sidebar:
+class Sidebar(Htmlable):
 
     def __init__(self, title, content, sidebar_type="middle-sidebar"):
         self.title, self.content, self.sidebar_type = title, content, sidebar_type
@@ -87,7 +93,7 @@ class Sidebar:
         return r
 
 
-class Message:
+class Message(Htmlable):
     def __init__(self, content):
         self.content = content
 

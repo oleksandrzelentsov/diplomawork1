@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% block title %}Log in{% endblock %}
+{% block mainContent %}
+<article class="topContent">
+<header>
+    <h2>
+        Log in
+    </h2>
+</header>
+<content>
+    <form name="form_login" action="/login/" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Login:</td><td><input type="text" name="username" id="username_field" /></td>
+            </tr>
+            <tr>
+                <td>Password:</td><td><input type="password" name="password" id="password_field" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" id="submit_btn" /></td>
+            </tr>
+        </table>
+    </form>
+</content>
+</article>
+{% endblock %}
+{% block optional_header %}
+<script type="text/javascript" src="{% static "js/login.js" %}"></script>
+{% endblock %}
