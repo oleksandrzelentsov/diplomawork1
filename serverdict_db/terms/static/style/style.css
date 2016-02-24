@@ -1,10 +1,11 @@
+/*@import url(http://fonts.googleapis.com/css?family=Ubuntu+Condensed&subset=latin,cyrillic);*/
+/*@import url(http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,cyrillic);*/
+/*Unused fonts:
+@import url(http://fonts.googleapis.com/css?family=Marck+Script&subset=latin,cyrillic);
 @import url(http://fonts.googleapis.com/css?family=Slabo+27px);
 @import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100&subset=latin,cyrillic);
-@import url(http://fonts.googleapis.com/css?family=Ubuntu+Condensed&subset=latin,cyrillic);
-@import url(http://fonts.googleapis.com/css?family=Poiret+One&subset=latin,cyrillic);
-@import url(http://fonts.googleapis.com/css?family=Marck+Script&subset=latin,cyrillic);
+*/
 body {
-  /*background: url("img/bg.jpg") fixed;*/
   background-color: #759CBF;
   color: #00070D;
   font-size: 90.5%;
@@ -81,7 +82,6 @@ a.disabled-link {
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  /*overflow: hidden;*/
 }
 .mainHeader nav a:hover, .mainHeader nav a:active, .mainHeader nav .active a:link, .mainHeader nav .active a:visited, .active {
   background-color: #496D8C;
@@ -153,8 +153,6 @@ a.disabled-link {
   text-align: center;
   float: left;
   padding-bottom: 9px;
-  /*padding-right: 20px;*/
-  /*padding-left: 20px;*/
   width: 100%;
   margin: 10px auto;
   font-family: "Poiret One", serif;
@@ -167,6 +165,26 @@ a.disabled-link {
 }
 article.topContent footer {
   line-height: 0.5;
+}
+.topContent content form table {
+  width: 200px;
+  margin: 0 auto;
+}
+.topContent content form table td {
+
+}
+.topContent content form table td > input[type="text"],
+.topContent content form table td > input[type="password"] {
+  width: 100%;
+  font-family: "Ubuntu Condensed";
+  border-radius: 5px;
+}
+.topContent content form table td > input#submit_btn {
+    width: 50% !important;
+    margin: 0 auto !important;
+}
+.topContent content form table td input#submit_btn {
+    border-color: white;
 }
 @media only screen and (min-width: 150px) and (max-width: 640px) {
   .body {
@@ -277,9 +295,6 @@ article.topContent footer {
   .mainFooter {
     background-color: #1A2A40;
     height: 75px;
-    /*padding-bottom: 9px;*/
-    /*padding-right: 20px;*/
-    /*padding-left: 20px;*/
     width: 96.5%;
     margin-left: 0;
     font-size: 25px;
