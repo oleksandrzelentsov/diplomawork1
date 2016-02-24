@@ -16,12 +16,12 @@ def it_works(request):
 	main_content += ''.join(my_declarations.Article('Article#%i' % (i + 1), random.choice(my_declarations.lipsum)).get_html() for i in range(10))
 	return my_declarations.get_page(request, main_content, my_declarations.Sidebar.get_random_sidebars(6), 0)
 
-@csrf_exempt # kostyl, needs to be figured out why CSRF does'nt work here
+
 def login(request):
 	if request.method not in {'GET', 'POST'}:
-		return my_declarations.get_error_page(msg='this page (%s) is not available using %s method' % (request.path, request.method))
+		return my_declarations.get_error_page('this page (%s) is not available using %s method' % (request.path, request.method))
 	if request.method == "GET": # just display the form
-		form = get_template('form_login.html').render({"Navigation": my_declarations.NavigationItem.make_navigation(request, 2)})
+		form = get_template('form_login.html').render(RequestContext(request, {"Navigation": my_declarations.NavigationItem.make_navigation(request, 2)}))
 		return HttpResponse(form)
 	elif request.method == "POST": # try to log in
 		return my_declarations.get_error_page(msg='authentication with %s:%s' % (request.POST['username'], request.POST['password']))

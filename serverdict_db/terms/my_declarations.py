@@ -1,7 +1,7 @@
 __author__ = 'Alexander Zelentsov'
 import random
 from django.template.loader import get_template
-from django.template import Context
+from django.template import Context, RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 import urllib.parse as urllib
 from abc import abstractmethod
@@ -31,7 +31,7 @@ lipsum = ["Lorem ipsum dolor sit amet,"
 
 class Htmlable:
     @abstractmethod
-    def get_html(self):
+    def get_html(self, request):
         pass
 
 
@@ -40,8 +40,11 @@ class NavigationItem(Htmlable):
     def __init__(self, text, active="",  href="#"):
         self.text, self.href, self.active = text, href, active
 
-    def get_html(self):
-        return get_template("navigation_item.html").render(Context({"item": self}, autoescape=False))
+    def get_html(self, request=None):
+        if request is not None:
+            return get_template("navigation_item.html").render(RequestContext(request, {"item": self}))
+        else:
+            return get_template("navigation_item.html").render(Context({"item": self}))
 
     @staticmethod
     def get_html_for_menu(items):
@@ -68,8 +71,11 @@ class Article(Htmlable):
     def __init__(self, title="", content="", additional_info="", href="#"):
         self.title, self.href, self.content, self.additional_info = title, href, content, additional_info
 
-    def get_html(self):
-        return get_template("article.html").render(Context({"article": self}, autoescape=False))
+    def get_html(self, request=None):
+        if request is not None:
+            return get_template("article.html").render(RequestContext(request, {"article": self}))
+        else:
+            return get_template("article.html").render(Context({"article": self}))
 
 
 class Sidebar(Htmlable):
@@ -77,8 +83,11 @@ class Sidebar(Htmlable):
     def __init__(self, title, content, sidebar_type="middle-sidebar"):
         self.title, self.content, self.sidebar_type = title, content, sidebar_type
 
-    def get_html(self):
-        return get_template("sidebar.html").render(Context({"sidebar": self}, autoescape=False))
+    def get_html(self, request=None):
+        if request is not None:
+            return get_template("sidebar.html").render(RequestContext(request, {"sidebar": self}))
+        else:
+            return get_template("sidebar.html").render(Context({"sidebar": self}))
 
     @staticmethod
     def get_random_sidebars(count: int):
@@ -97,16 +106,19 @@ class Message(Htmlable):
     def __init__(self, content):
         self.content = content
 
-    def get_html(self):
-        return get_template("message.html").render(Context({"message": self}, autoescape=False))
+    def get_html(self, request=None):
+        if request is not None:
+            return get_template("message.html").render(RequestContext(request, {"message": self}))
+        else:
+            return get_template("message.html").render(Context({"message": self}))
 
 
 def get_page(request, main_content='', sidebars='', nav_active_number=-1):
     return HttpResponse(
-        get_template('index.html').render(Context({
+        get_template('index.html').render(RequestContext(request, {
             "Content": main_content,
             "Navigation": NavigationItem.make_navigation(request, nav_active_number),
-            "Sidebars": sidebars}, autoescape=False)))
+            "Sidebars": sidebars})))
 
 
 def get_error_page(msg=''):

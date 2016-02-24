@@ -3,13 +3,19 @@
 {% block title %}Welcome!{% endblock %}
 
 {% block navigation %}
+    {% autoescape off %}
     {{ Navigation }}
+    {% endautoescape %}
 {% endblock %}
 
 {% block mainContent %}
-{{ Content }}
+    {% autoescape off %}
+    {{ Content }}
+    {% endautoescape %}
 {% endblock %}
 
 {% block sidebars %}
+    {% autoescape off %}
     {{ Sidebars }}
+    {% endautoescape %}
 {% endblock %}
