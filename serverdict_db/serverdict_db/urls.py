@@ -21,7 +21,8 @@ urlpatterns = [
 	url(r'^$', views.it_works),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', views.login),
-    url(r'^search', views.search),
+    url(r'^logout/', views.logout),
+    # url(r'^search', views.search),
     url(r'^error', views.error),
     # REST API:
     url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),

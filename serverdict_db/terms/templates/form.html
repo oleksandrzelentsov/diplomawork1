@@ -1,5 +1,0 @@
-<form method="{% if data.method %}{{data.method}}{% else %}get{% endif %}" action="{{data.action}}">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="{% if data.submit_text %}{{data.submit_text}}{% else %}Submit{% endif %}" />
-</form>

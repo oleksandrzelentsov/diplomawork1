@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
-from terms import my_declarations
+from terms.mypackage import functions
 
 
 def get(request, what):
-    return my_declarations.get_error_page('Api is not implemented yet! Sorry!')
+    return functions.get_error_page('Api is not implemented yet! Sorry!')

@@ -2,8 +2,6 @@ __author__ = 'Alexander Zelentsov'
 import random
 from django.template.loader import get_template
 from django.template import Context, RequestContext
-from django.http import HttpResponse, HttpResponseRedirect
-import urllib.parse as urllib
 from abc import abstractmethod
 
 lipsum = ["Lorem ipsum dolor sit amet,"
@@ -111,15 +109,3 @@ class Message(Htmlable):
             return get_template("message.html").render(RequestContext(request, {"message": self}))
         else:
             return get_template("message.html").render(Context({"message": self}))
-
-
-def get_page(request, main_content='', sidebars='', nav_active_number=-1):
-    return HttpResponse(
-        get_template('index.html').render(RequestContext(request, {
-            "Content": main_content,
-            "Navigation": NavigationItem.make_navigation(request, nav_active_number),
-            "Sidebars": sidebars})))
-
-
-def get_error_page(msg=''):
-    return HttpResponseRedirect('/error?message=%s' % (urllib.quote_plus(msg)))
