@@ -18,12 +18,12 @@ from django.contrib import admin
 from terms import views, api
 
 urlpatterns = [
-	url(r'^$', views.it_works),
+	# url(r'^$', views.it_works),
+    url(r'^$', views.index),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', views.login),
+    url(r'^terms/', views.terms),
     url(r'^logout/', views.logout),
-    # url(r'^search', views.search),
-    url(r'^error', views.error),
+    url(r'^login/', views.login),
     # REST API:
     url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
 ]

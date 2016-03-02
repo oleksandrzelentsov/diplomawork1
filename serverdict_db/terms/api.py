@@ -1,6 +1,5 @@
-from django.http import HttpResponseRedirect
-from terms.mypackage import functions
+from django.http import Http404
 
 
 def get(request, what):
-    return functions.get_error_page('Api is not implemented yet! Sorry!')
+    raise Http404('Api is not implemented yet. Sorry.')
