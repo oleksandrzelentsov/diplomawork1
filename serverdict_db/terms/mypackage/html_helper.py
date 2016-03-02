@@ -1,8 +1,4 @@
 __author__ = 'Alexander Zelentsov'
-import random
-from django.template.loader import get_template
-from django.template import Context, RequestContext
-from abc import abstractmethod
 
 lipsum = ["Lorem ipsum dolor sit amet,"
           " consectetur adipiscing elit."
@@ -27,85 +23,19 @@ lipsum = ["Lorem ipsum dolor sit amet,"
           " Class aptent taciti sociosqu ad litora torquent per conubia nostra,"
           " per inceptos himenaeos. Donec eget urna id urna porta consectetur vel sed. "]
 
-class Htmlable:
-    @abstractmethod
-    def get_html(self, request):
-        pass
 
+class NavigationItem:
 
-class NavigationItem(Htmlable):
-
-    def __init__(self, text, active="",  href="#"):
+    def __init__(self, text, href, active=False):
         self.text, self.href, self.active = text, href, active
 
-    def get_html(self, request=None):
-        if request is not None:
-            return get_template("navigation_item.html").render(RequestContext(request, {"item": self}))
-        else:
-            return get_template("navigation_item.html").render(Context({"item": self}))
 
-    @staticmethod
-    def get_html_for_menu(items):
-        return get_template("navigation_items.html").render(Context({
-            "navigation_items": [x.get_html for x in items]
-        }, autoescape=False))
+class Article:
 
-    @staticmethod
-    def make_navigation(request, active_number=-1):
-        items = [
-            NavigationItem("Домой", href='/'),
-            NavigationItem("О нас", href='about'),
-            NavigationItem("Вход" if not request.user.is_authenticated() else "Выход",
-                                           href="login"),
-            NavigationItem("Поиск", href='search')
-        ]
-        if active_number != -1:
-            items[active_number].active = 'active'
-        return NavigationItem.get_html_for_menu(items)
-
-
-class Article(Htmlable):
-
-    def __init__(self, title="", content="", additional_info="", href="#"):
+    def __init__(self, title, content, additional_info="", href=""):
         self.title, self.href, self.content, self.additional_info = title, href, content, additional_info
 
-    def get_html(self, request=None):
-        if request is not None:
-            return get_template("article.html").render(RequestContext(request, {"article": self}))
-        else:
-            return get_template("article.html").render(Context({"article": self}))
 
-
-class Sidebar(Htmlable):
-
-    def __init__(self, title, content, sidebar_type="middle-sidebar"):
-        self.title, self.content, self.sidebar_type = title, content, sidebar_type
-
-    def get_html(self, request=None):
-        if request is not None:
-            return get_template("sidebar.html").render(RequestContext(request, {"sidebar": self}))
-        else:
-            return get_template("sidebar.html").render(Context({"sidebar": self}))
-
-    @staticmethod
-    def get_random_sidebars(count: int):
-        sidebars = ''
-        sidebars = [Sidebar(
-            "Боковая колонка №%i" % (x + 1),
-            random.choice(lipsum)
-        ) for x in range(count)]
-        sidebars[0].sidebar_type = 'top-sidebar'
-        sidebars[-1].sidebar_type = 'bottom-sidebar'
-        r = ''.join([x.get_html() for x in sidebars])
-        return r
-
-
-class Message(Htmlable):
+class Message:
     def __init__(self, content):
         self.content = content
-
-    def get_html(self, request=None):
-        if request is not None:
-            return get_template("message.html").render(RequestContext(request, {"message": self}))
-        else:
-            return get_template("message.html").render(Context({"message": self}))

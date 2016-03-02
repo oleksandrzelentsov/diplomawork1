@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, AnonymousUser
+from datetime import datetime
 # Create your models here.
 
 
@@ -27,7 +28,8 @@ class Term(models.Model):
     author = models.ForeignKey(Author, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     public = models.BooleanField(default=False)
-    accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True, null=True)
+    accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True)
+    date_added = models.DateField(auto_now=True)
 
     def __str__(self):
         return self.name + (" [%s]" % self.category)
