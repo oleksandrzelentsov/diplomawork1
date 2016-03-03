@@ -29,7 +29,7 @@ class Term(models.Model):
     year = models.IntegerField(blank=True, null=True)
     public = models.BooleanField(default=False)
     accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True)
-    date_added = models.DateField(auto_now=True)
+    date_added = models.DateTimeField(datetime.now())
 
     def __str__(self):
         return self.name + (" [%s]" % self.category)

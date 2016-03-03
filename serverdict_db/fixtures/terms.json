@@ -1,0 +1,1 @@
+[{"model": "terms.author", "pk": 1, "fields": {"name": "James Joseph Sylvester", "user": 1}}, {"model": "terms.category", "pk": 1, "fields": {"name": "Mathematics"}}, {"model": "terms.term", "pk": 1, "fields": {"name": "matrix", "definition": "--------", "category": 1, "user": 1, "popularity": 1, "author": 1, "year": null, "public": true, "date_added": null, "accesibility": []}}]

@@ -38,8 +38,8 @@ def login(request):
 		if user is None:
 			# return the same page with errors if no
 			nav = NavigationItem.get_navigation(request, 1)
-			msg = Message('<b>Error!</b> Wrong authentication data.')
-			context = RequestContext(request, {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg]})
+			alert1 = Alert('<b>Error!</b> Wrong authentication data.', 3)
+			context = RequestContext(request, {'navigation_items': nav, 'username': request.POST['username'], 'errors': [alert1]})
 			return render_to_response(template_name, context)
 		elif not user.is_active:
 			nav = NavigationItem.get_navigation(request, 1)

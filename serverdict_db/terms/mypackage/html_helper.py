@@ -50,9 +50,12 @@ class Article:
 		self.title, self.href, self.content, self.additional_info = title, href, content, additional_info
 
 
-class Message:
-	def __init__(self, content):
-		self.content = content
+class Alert:
+
+	alert_types = ['success', 'info', 'warning', 'danger']
+
+	def __init__(self, text, alert_type=0):
+		self.text, self.type = text, alert_types[alert_type % len(alert_types)]
 
 	def __str__(self):
-		return self.content
+		return self.text
