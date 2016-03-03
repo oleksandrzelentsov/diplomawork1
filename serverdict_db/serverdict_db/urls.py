@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^terms/', views.terms),
     url(r'^logout/', views.logout),
     url(r'^login/', views.login),
+    url(r'^register/', views.register),
     # REST API:
     url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
 ]

@@ -39,13 +39,13 @@
                     {% if navigation_item.active %}
                         <li class="active">
                             <a href="{{ navigation_item.href }}">
-                                {{ navigation_item.text }} <span class="sr-only">(current)</span>
+                                {% autoescape off %}{{ navigation_item.text }}{% endautoescape %} <span class="sr-only">(current)</span>
                             </a>
                         </li>
                     {% else %}
                         <li>
                             <a href="{{ navigation_item.href }}">
-                                {{ navigation_item.text }}
+                                {% autoescape off %}{{ navigation_item.text }}{% endautoescape %}
                             </a>
                         </li>
                     {% endif %}
@@ -54,6 +54,7 @@
               <!-- navbar-left will move the search to the left -->
               <form class="navbar-form navbar-right" role="search">
                 <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="basic-addon1"><span class='glyphicon glyphicon-search'></span></span>
                   <input type="text" class="form-control" placeholder="Search">
                   <span class="input-group-btn">
                       <button type="submit" class="btn btn-default" disabled >Go!</button>
@@ -66,9 +67,10 @@
         </div>
     <body class="body">
         <div class="container">
-            <div class="jumbotron">
+            <p class="text-primary">
                 <h1 align="center">Get your <u>Voter</u>. Today.</h1>
-            </div>
+                <br>
+            </p>
         </div>
         {% block main_content %}
         {% endblock %}
