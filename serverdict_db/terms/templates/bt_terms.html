@@ -3,18 +3,20 @@
 {% block main_content %}
 <div class="container">
     {% for term in terms %}
-        <div class="well well-md" >
-            <h3>
-                <a href="/terms/{{ term.id }}">
-                    {{ term.name }}
-                </a>
-                <br>
-                <small>
-                    {{ term.category }}
-                </small>
-            </h3>
-            <br>
+        <div class="panel panel-default" >
+            <div class="panel-body">
+                <h3>
+                    <a href="/terms/{{ term.id }}">
+                        {{ term.name }}
+                    </a>
+                    <br>
+                    <small>
+                        {{ term.category }}
+                    </small>
+                </h3>
+            </div>
         </div>
+        <br>
     {% endfor %}
 </div>
 {% endblock %}

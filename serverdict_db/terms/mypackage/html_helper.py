@@ -55,7 +55,7 @@ class Alert:
 	alert_types = ['success', 'info', 'warning', 'danger']
 
 	def __init__(self, text, alert_type=0):
-		self.text, self.type = text, alert_types[alert_type % len(alert_types)]
+		self.text, self.type = text, Alert.alert_types[alert_type]
 
 	def __str__(self):
 		return self.text

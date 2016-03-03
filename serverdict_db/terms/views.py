@@ -43,7 +43,7 @@ def login(request):
 			return render_to_response(template_name, context)
 		elif not user.is_active:
 			nav = NavigationItem.get_navigation(request, 1)
-			msg = Message('<b>Sorry!</b> This user is disabled. Contact <a href="mailto:oleksandrzelentsov@gmail.com">admin</a> to resolve this issue.')
+			msg = Alert('<b>Sorry!</b> This user is disabled. Contact <a href="mailto:oleksandrzelentsov@gmail.com">admin</a> to resolve this issue.')
 			context = RequestContext(request, {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg]})
 			return render_to_response(template_name, context)
 		else:
