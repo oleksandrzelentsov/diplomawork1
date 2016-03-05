@@ -1,3 +1,0 @@
-#!/bin/sh
-python3 manage.py dumpdata --format=json terms > fixtures/terms.json
-python3 manage.py dumpdata --format=json auth > fixtures/auth.json
