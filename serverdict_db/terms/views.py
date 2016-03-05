@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.template.loader import get_template
@@ -19,9 +19,9 @@ def terms(request):
         nav = NavigationItem.get_navigation(request, 0)
         c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav}
         context = RequestContext(request, c_dict)
-        return get_template("bt_terms.html").render(context)
+        return HttpResponse(get_template("bt_terms.html").render(context))
     else:
-        raise Http404("Wrong method %s." % request.method)
+        return error(request, '%s method is not allowed for this page' % request.method)
 
 
 def login(request):
@@ -63,6 +63,10 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 
+def error(request: HttpRequest, message: str):
+    return HttpResponse(get_template('bt_error.html').render(RequestContext(request, {'message': message})))
+
+
 def register(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
@@ -78,4 +82,4 @@ def register(request):
         # email or username is present
         pass
     else:
-        return Http404()
+        return error(request, '%s method is not allowed for this page' % request.method)
