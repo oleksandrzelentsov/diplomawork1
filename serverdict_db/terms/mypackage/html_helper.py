@@ -30,8 +30,15 @@ class Article:
 class Alert:
     alert_types = ['success', 'info', 'warning', 'danger']
 
-    def __init__(self, text, alert_type=0):
-        self.text, self.type = text, Alert.alert_types[alert_type]
+    def __init__(self, text, alert_type='danger'):
+        self.text = text
+        if isinstance(alert_type, int):
+            self.alert_type = Alert.alert_types[alert_type]
+        elif isinstance(alert_type, str) and alert_type in Alert.alert_types:
+            self.alert_type = alert_type
+        else:
+            print("bad argument for Alert constructor: (%s: %s)" % (alert_type, alert_type.__class__.__name__))
+            self.alert_type = 'danger'
 
     def __str__(self):
         return self.text

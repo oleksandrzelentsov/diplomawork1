@@ -3,14 +3,14 @@
 {% block main_content %}
 <div class="container">
     <h1 class="page-header">
-        Log in
+        Sign up
     </h1>
-    <form method="post" action="/login/" role="form">
+    <form method="post" action="/register/" role="form">
         {% csrf_token %}
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label for="usr">Username:</label>
+                    <label for="usr"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Username:</label>
                     {% if username %}
                     <input type="text" class="form-control" name="username" id="usr" value="{{ username }}" />
                     {% else %}
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label for="pwd">Password:</label>
+                    <label for="pwd"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Password:</label>
                     <input type="password" class="form-control" name="password" id="pwd">
                 </div>
             </div>
@@ -30,8 +30,20 @@
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label for="rpwd">Repeat password:</label>
+                    <label for="rpwd"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Repeat password:</label>
                     <input type="password" class="form-control" name="repeat_password" id="rpwd">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                <div class="form-group">
+                    <label for="eml"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> E-mail:</label>
+                    {% if email %}
+                    <input type="text" class="form-control" name="email" id="eml" value="{{email}}">
+                    {% else %}
+                    <input type="text" class="form-control" name="email" id="eml">
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -50,30 +62,6 @@
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
-                    <label for="eml">First name:</label>
-                    {% if email %}
-                    <input type="text" class="form-control" name="email" id="eml" value="{{email}}">
-                    {% else %}
-                    <input type="text" class="form-control" name="email" id="eml">
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                <div class="form-group">
-                    <label for="mdl_nm">Middle name:</label>
-                    {% if middle_name %}
-                    <input type="text" class="form-control" name="middle_name" id="mdl_nm" value="{{middle_name}}">
-                    {% else %}
-                    <input type="text" class="form-control" name="middle_name" id="mdl_nm">
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                <div class="form-group">
                     <label for="lst_nm">Last name:</label>
                     {% if last_name %}
                     <input type="text" class="form-control" name="last_name" id="lst_nm" value="{{last_name}}">
@@ -84,13 +72,13 @@
             </div>
         </div>
         {% for error in errors %}
-            <div class="alert alert-{{ error.type }}" role="alert">
+            <div class="alert alert-{{ error.alert_type }}" role="alert">
                 {% autoescape off %}{{ error }}{% endautoescape %}
             </div>
         {% endfor %}
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                <button type="submit" class="btn btn-primary">Log in</button>
+                <button type="submit" class="btn btn-primary">Sign up</button>
             </div>
         </div>
     </form>

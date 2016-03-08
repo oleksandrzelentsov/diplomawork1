@@ -28,7 +28,7 @@
             </div>
         </div>
         {% for error in errors %}
-            <div class="alert alert-{{ error.type }}" role="alert">
+            <div class="alert alert-{{ error.alert_type }}" role="alert">
                 {% autoescape off %}{{ error }}{% endautoescape %}
             </div>
         {% endfor %}

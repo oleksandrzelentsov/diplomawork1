@@ -103,6 +103,8 @@ USE_TZ = True
 
 HTML_MINIFY = True
 
+ADMIN_EMAIL = 'oleksandrzelentsov@gmail.com'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

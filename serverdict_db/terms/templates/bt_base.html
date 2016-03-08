@@ -66,13 +66,15 @@
         </nav>
         </div>
     <body class="body">
+        {% block main_content %}
+        {% endblock %}
+        {% block footer %}
         <div class="container">
             <p class="text-primary">
                 <h1 align="center">Get your <u>Voter</u>. Today.</h1>
                 <br>
             </p>
         </div>
-        {% block main_content %}
         {% endblock %}
     </body>
 </html>
