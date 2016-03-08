@@ -39,7 +39,23 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label for="fst_nm">First name:</label>
+                    {% if first_name %}
+                    <input type="text" class="form-control" name="first_name" id="fst_nm" value="{{first_name}}">
+                    {% else %}
                     <input type="text" class="form-control" name="first_name" id="fst_nm">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                <div class="form-group">
+                    <label for="eml">First name:</label>
+                    {% if email %}
+                    <input type="text" class="form-control" name="email" id="eml" value="{{email}}">
+                    {% else %}
+                    <input type="text" class="form-control" name="email" id="eml">
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -47,7 +63,11 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label for="mdl_nm">Middle name:</label>
+                    {% if middle_name %}
+                    <input type="text" class="form-control" name="middle_name" id="mdl_nm" value="{{middle_name}}">
+                    {% else %}
                     <input type="text" class="form-control" name="middle_name" id="mdl_nm">
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -55,7 +75,11 @@
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
                 <div class="form-group">
                     <label for="lst_nm">Last name:</label>
+                    {% if last_name %}
+                    <input type="text" class="form-control" name="last_name" id="lst_nm" value="{{last_name}}">
+                    {% else %}
                     <input type="text" class="form-control" name="last_name" id="lst_nm">
+                    {% endif %}
                 </div>
             </div>
         </div>
