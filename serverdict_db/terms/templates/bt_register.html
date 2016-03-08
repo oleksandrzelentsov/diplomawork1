@@ -35,6 +35,30 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                <div class="form-group">
+                    <label for="fst_nm">First name:</label>
+                    <input type="text" class="form-control" name="first_name" id="fst_nm">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                <div class="form-group">
+                    <label for="mdl_nm">Middle name:</label>
+                    <input type="text" class="form-control" name="middle_name" id="mdl_nm">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+                <div class="form-group">
+                    <label for="lst_nm">Last name:</label>
+                    <input type="text" class="form-control" name="last_name" id="lst_nm">
+                </div>
+            </div>
+        </div>
         {% for error in errors %}
             <div class="alert alert-{{ error.type }}" role="alert">
                 {% autoescape off %}{{ error }}{% endautoescape %}

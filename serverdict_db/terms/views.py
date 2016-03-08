@@ -18,8 +18,7 @@ def terms(request):
     if request.method == 'GET':
         nav = NavigationItem.get_navigation(request, 0)
         c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav}
-        context = RequestContext(request, c_dict)
-        return HttpResponse(get_template("bt_terms.html").render(context))
+        return HttpResponse(get_template("bt_terms.html").render(context=c_dict, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
@@ -30,8 +29,7 @@ def login(request):
     template_name = 'bt_login_form.html'
     if request.method == 'GET':
         nav = NavigationItem.get_navigation(request, 1)
-        context = RequestContext(request, {'navigation_items': nav})
-        return render_to_response(template_name, context)
+        return HttpResponse(get_template(template_name).render(context={'navigation_items': nav}, request=request))
     elif request.method == 'POST':
         # check data
         user = authenticate(username=request.POST['username'], password=request.POST['password'])
@@ -39,17 +37,16 @@ def login(request):
             # return the same page with errors if no
             nav = NavigationItem.get_navigation(request, 1)
             alert1 = Alert('<b>Error!</b> Wrong authentication data.', 3)
-            context = RequestContext(request, {'navigation_items': nav, 'username': request.POST['username'],
-                                               'errors': [alert1]})
-            return render_to_response(template_name, context)
+            context = {'navigation_items': nav, 'username': request.POST['username'],
+                       'errors': [alert1]}
+            return HttpResponse(get_template(template_name).render(context=context, request=request))
         elif not user.is_active:
             nav = NavigationItem.get_navigation(request, 1)
             msg = Alert(
-                '<b>Sorry!</b> This user is disabled. Contact <a href="mailto:oleksandrzelentsov@gmail.com">'
-                'admin</a> to resolve this issue.')
-            context = RequestContext(request,
-                                     {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg]})
-            return render_to_response(template_name, context)
+                    '<b>Sorry!</b> This user is disabled. Contact <a href="mailto:oleksandrzelentsov@gmail.com">'
+                    'admin</a> to resolve this issue.')
+            context = {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg]}
+            return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
             # authorize if yes and redirect to main page
             auth_login(request, user)
@@ -64,16 +61,17 @@ def logout(request):
 
 
 def error(request: HttpRequest, message: str):
-    return HttpResponse(get_template('bt_error.html').render(RequestContext(request, {'message': message})))
+    return HttpResponse(get_template('bt_error.html').render(context={'message': message}, request=request))
 
 
 def register(request):
     if request.method == 'GET':
         if request.user.is_authenticated():
-            HttpResponseRedirect('/')
+            return HttpResponseRedirect('/')
         else:
-            # show register form
-            pass
+            nav = NavigationItem.get_navigation(request, 2)
+            context = {'navigation_items': nav}
+            return HttpResponse(get_template('bt_register.html').render(context=context, request=request))
     elif request.method == 'POST':
         # check parameters
         # collect errors
