@@ -1,4 +1,16 @@
 from django.contrib.auth.models import AnonymousUser
+import random
+
+
+magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow']
+random.shuffle(magic_words)
+current_index = 0
+
+
+def get_random_magic_word():
+    global current_index
+    current_index += 1
+    return magic_words[(current_index - 1) % len(magic_words)]
 
 
 class NavigationItem:
