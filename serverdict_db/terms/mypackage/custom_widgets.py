@@ -58,60 +58,13 @@ class Form:
         self.fields.append(field_)
 
     def __str__(self):
-        return str.format('''
+        return '''
             <h1 class="page-header">
                 {name}
             </h1>
             <form method="{method}" action="{action}" role="form">
-            {% csrf_token %}
+            {csrf}
             {fields}
             </form>
-        ''', {'name': self.name, 'method': self.method, 'fields': ''.join(self.fields)})
-
-
-template = ''
-
-extend_ = input('type something if you want your template to extend from something ')
-
-if extend_:
-    extend_ = input('type base template: ')
-    template += "{}{}{}".format('{% extends "', extend_, '" %}')
-
-
-def forms():
-    form = Form(input('type form name: '), input('type form method: '), input('type form action: '))
-    field = input('do you want a field? ')
-    while field:
-        field = Field(input('type field\'s name: '), input('type the field type: '),
-                      True if input('type smth if field is required ') else False,
-                      True if input('type smth if field should save its value on form send') else False)
-        form.add_field(field)
-        field = input('do you want one more field? ')
-    global template
-    template += str.format('{a}<div class="container">{form}</div>{b}',
-                           {'form': form, 'a': '{% block main_content %}', 'b': '{% endblock %}'})
-
-
-def block():
-    global template
-    template += "{}{}{}".format('%s%s%s' % ('{% block ', input('type the blockname: '), ' %}'), input('type the content: \n'), '{% endblock %}')
-
-
-def blocks():
-    t = input('type smth if you want any blocks')
-    while t:
-        t = input('type block name: ')
-        if t == 'form':
-            forms()
-        else:
-            block()
-        t = input('type smth if you want any blocks')
-
-blocks()
-
-filename = input('type filename: ')
-
-with open(filename) as f:
-    f.write(template)
-
-print(template)
+        '''.format(
+            {'csrf': '{% csrf_token %}', 'name': self.name, 'method': self.method, 'fields': ''.join(self.fields)})

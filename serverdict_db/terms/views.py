@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
 from django.template.loader import get_template
@@ -42,8 +43,8 @@ def login(request):
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         elif not user.is_active:
             msg = Alert(
-                    '<b>Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % ADMIN_EMAIL +
-                    'admin</a> to resolve this issue.')
+                '<b>Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % ADMIN_EMAIL +
+                'admin</a> to resolve this issue.')
             context = {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg]}
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
@@ -62,8 +63,8 @@ def logout(request):
 def error(request: HttpRequest, message: str, redirect=None):
     nav = NavigationItem.get_navigation(request)
     return HttpResponse(get_template('bt_error.html').render(
-            context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav},
-            request=request))
+        context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav},
+        request=request))
 
 
 def success(request: HttpRequest, message: str, redirect=None):
@@ -101,6 +102,8 @@ def register(request):
         return error(request, '%s method is not allowed for this page' % request.method)
 
 
+@login_required(login_url='/login/')
 def add_term(request):
-    template_name = 'bt_add_term.html'
+    template_name = 'bt_form.html'
     nav = NavigationItem.get_navigation(request, 2)
+    return error(request, 'Okay')
