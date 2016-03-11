@@ -99,3 +99,8 @@ def register(request):
             return success(request, '<h3>Success</h3>creating user.', redirect={'url': '/', 'time': 5})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
+
+
+def add_term(request):
+    template_name = 'bt_add_term.html'
+    nav = NavigationItem.get_navigation(request, 2)

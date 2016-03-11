@@ -28,7 +28,7 @@ class Term(models.Model):
     author = models.ForeignKey(Author, blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     public = models.BooleanField(default=False)
-    accesibility = models.ManyToManyField(User, related_name="granted_users", blank=True)
+    accessibility = models.ManyToManyField(User, related_name="granted_users", blank=True)
     date_added = models.DateTimeField(datetime.now())
 
     def __str__(self):
@@ -36,15 +36,15 @@ class Term(models.Model):
 
     def grant_access(self, *users):
         for user in users:
-            if user not in self.accesibility.all() and user is not self.user:
-                self.accesibility.add(user)
+            if user not in self.accessibility.all() and user is not self.user:
+                self.accessibility.add(user)
                 self.popularity += 1
                 self.save()
 
     def forbid_access(self, *users):
         for user in users:
-            if user in self.accesibility.all():
-                self.accesibility.remove(user)
+            if user in self.accessibility.all():
+                self.accessibility.remove(user)
                 self.popularity -= 1
                 self.save()
             elif user is self.user:
