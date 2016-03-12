@@ -64,7 +64,7 @@
                     </label>
                     <select class="form-control" id="year">
                         {% for year in years %}
-                        <option value="{{year}}" {% if term.year == year %}selected{% endif %}>{{year}}</option>
+                        <option value="{{year.numeric}}" {% if term.year == year %}selected{% endif %}>{{year}}</option>
                         {% endfor %}
                     </select>
                 </div>

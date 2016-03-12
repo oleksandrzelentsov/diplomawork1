@@ -112,8 +112,18 @@ def add_term(request):
     nav = NavigationItem.get_navigation(request, 2)
     if request.method == 'GET':
         categories = Category.objects.all()
-        years = [x + ' hundred years BC' for x in list(map(str, list([y * 0.5 for y in range(1, 22)])[::-1]))]
-        years += (list(map(str, range(datetime.now().year + 1))))
+
+        class Year:
+            def __init__(self, numeric, string_representation):
+                self.string_representation = string_representation
+                self.numeric = numeric
+
+            def __str__(self):
+                return self.string_representation
+
+        years = [Year(int(-x * 1e+3), '%i hundred years BC' % x) for x in
+                 list(list([y * 0.5 for y in range(1, 22)])[::-1])]
+        years += [Year(x, str(x)) for x in (list(range(datetime.now().year + 1)))]
         years = years[::-1]
         context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS}
         return HttpResponse(get_template(template_name).render(context=context, request=request))
