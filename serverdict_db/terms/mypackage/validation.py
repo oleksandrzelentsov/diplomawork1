@@ -1,7 +1,9 @@
 import re
 
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 
+from serverdict_db.settings import ADMIN_EMAIL
 from terms.mypackage.html_helper import Alert, get_random_magic_word
 
 
@@ -22,9 +24,9 @@ class FormValidator:
                     self._arguments[k] = v[0]
 
         if 'first_name' in self._arguments.keys():
-            self._arguments['first_name'] = self._arguments['first_name'].strip()
+            self._arguments['first_name'] = self._arguments['first_name'].strip().capitalize()
         if 'last_name' in self._arguments.keys():
-            self._arguments['last_name'] = self._arguments['last_name'].strip()
+            self._arguments['last_name'] = self._arguments['last_name'].strip().capitalize()
 
     def errors(self):
         self.validate_password()
@@ -66,9 +68,6 @@ class FormValidator:
 
 
 class RegisterFormValidator(FormValidator):
-    def __init__(self, **validation_kwargs):
-        FormValidator.__init__(self, **validation_kwargs)
-
     def validate_email(self):
         FormValidator.validate_email(self)
         if 'email' in self._arguments.keys():
@@ -94,3 +93,21 @@ class RegisterFormValidator(FormValidator):
         FormValidator.errors(self)
         return self._errors
 
+
+class LoginFormValidator(FormValidator):
+    def validate_user(self):
+        user = authenticate(username=self._arguments['username'], password=self._arguments['password'])
+        if user is None:
+            # return the same page with errors if no
+            self._errors.append(Alert('<b>%s!</b> Wrong authentication data.' % get_random_magic_word(), 'danger'))
+        elif not user.is_active:
+            msg = Alert(
+                    '<b>%s! Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % (
+                        get_random_magic_word(), ADMIN_EMAIL) +
+                    'admin</a> to resolve this issue.')
+            self._errors.append(msg)
+
+    def errors(self):
+        FormValidator.errors(self)
+        self.validate_user()
+        return self._errors

@@ -11,7 +11,7 @@ from django.template.loader import get_template
 from serverdict_db.settings import ADMIN_EMAIL, FORM_FIELD_CLASS
 from terms.models import Term, Category
 from terms.mypackage.html_helper import *
-from terms.mypackage.validation import RegisterFormValidator
+from terms.mypackage.validation import RegisterFormValidator, LoginFormValidator
 
 
 def index(request):
@@ -34,26 +34,23 @@ def login(request):
     nav = NavigationItem.get_navigation(request, 1)
     if request.method == 'GET':
         return HttpResponse(
-            get_template(template_name).render(context={'navigation_items': nav, 'field_class': FORM_FIELD_CLASS},
-                                               request=request))
+                get_template(template_name).render(context={'navigation_items': nav, 'field_class': FORM_FIELD_CLASS},
+                                                   request=request))
     elif request.method == 'POST':
         # check data
-        user = authenticate(username=request.POST['username'], password=request.POST['password'])
-        if user is None:
+        form_validator = LoginFormValidator(**dict(request.POST))
+
+        errors = form_validator.errors()
+
+        if errors:
             # return the same page with errors if no
-            alert1 = Alert('<b>Error!</b> Wrong authentication data.', 'danger')
             context = {'navigation_items': nav, 'username': request.POST['username'],
-                       'errors': [alert1], 'field_class': FORM_FIELD_CLASS}
-            return HttpResponse(get_template(template_name).render(context=context, request=request))
-        elif not user.is_active:
-            msg = Alert(
-                    '<b>Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % ADMIN_EMAIL +
-                    'admin</a> to resolve this issue.')
-            context = {'navigation_items': nav, 'username': request.POST['username'], 'errors': [msg],
-                       'field_class': FORM_FIELD_CLASS}
+                       'errors': errors, 'field_class': FORM_FIELD_CLASS}
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
             # authorize if yes and redirect to main page
+            user = authenticate(username=form_validator.form_data()['username'],
+                                password=form_validator.form_data()['password'])
             auth_login(request, user)
             return HttpResponseRedirect('/')
         pass
