@@ -2,7 +2,7 @@ from django.contrib.auth.models import AnonymousUser
 import random
 
 
-magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow']
+magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow', 'Whoa', 'Whaat?']
 random.shuffle(magic_words)
 current_index = 0
 
