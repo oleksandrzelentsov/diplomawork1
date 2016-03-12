@@ -105,6 +105,8 @@ HTML_MINIFY = True
 
 ADMIN_EMAIL = 'oleksandrzelentsov@gmail.com'
 
+FORM_FIELD_CLASS = 'col-xs-12 col-sm-6 col-md-4 col-lg-2'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/

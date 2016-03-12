@@ -8,7 +8,7 @@
     <form method="post" action="/register/" role="form">
         {% csrf_token %}
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="usr"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Username:</label>
                     {% if username %}
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="pwd"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Password:</label>
                     <input type="password" class="form-control" name="password" id="pwd">
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="rpwd"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Repeat password:</label>
                     <input type="password" class="form-control" name="repeat_password" id="rpwd">
@@ -36,7 +36,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="eml"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> E-mail:</label>
                     {% if email %}
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="fst_nm">First name:</label>
                     {% if first_name %}
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
                     <label for="lst_nm">Last name:</label>
                     {% if last_name %}
@@ -77,7 +77,7 @@
             </div>
         {% endfor %}
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <button type="submit" class="btn btn-primary">Sign up</button>
             </div>
         </div>

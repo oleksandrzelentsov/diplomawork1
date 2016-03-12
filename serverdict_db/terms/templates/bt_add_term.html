@@ -7,38 +7,78 @@
     </h1>
     <form method="post" action="" role="form">
         {% csrf_token %}
+        <!--Name-->
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
-                    <label for="nm"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Name:</label>
-                    {% if term.name %}
-                    <input type="text" class="form-control" name="name" id="nm" value="{{ term.name }}" />
-                    {% else %}
-                    <input type="text" class="form-control" name="name" id="nm" />
-                    {% endif %}
+                    <label for="nm">
+                        <span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Name:
+                    </label>
+                    <input type="text" class="form-control" name="name" id="nm" value="{{ term.name }}"/>
                 </div>
             </div>
         </div>
+        <!--Definition-->
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
+            <div class="{{field_class}}">
                 <div class="form-group">
-                    <label for="nm"><span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Name:</label>
-                    {% if term.name %}
-                    <input type="textarea" class="form-control" name="name" id="nm" value="{{ term.name }}" />
-                    {% else %}
-                    <input type="text" class="form-control" name="name" id="nm" />
-                    {% endif %}
+                    <label for="nm">
+                        <span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Definition:
+                    </label>
+                    <textarea rows="5" class="form-control" name="definition" id="definition">{{ term.definition }}</textarea>
                 </div>
             </div>
         </div>
+        <!--Category-->
+        <div class="row">
+            <div class="{{field_class}}">
+                <div class="form-group">
+                    <label for="category">
+                        <span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Category:
+                    </label>
+                    <select class="form-control" id="category">
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if term.category == category %}selected{% endif %}>{{category}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--Author-->
+        <div class="row">
+            <div class="{{field_class}}">
+                <div class="form-group">
+                    <label for="author">
+                        Author:
+                    </label>
+                    <input type="text" class="form-control" name="author" id="author" value="{{ term.author }}"/>
+                </div>
+            </div>
+        </div>
+        <!--Year-->
+        <div class="row">
+            <div class="{{field_class}}">
+                <div class="form-group">
+                    <label for="year">
+                        Year:
+                    </label>
+                    <select class="form-control" id="year">
+                        {% for year in years %}
+                        <option value="{{year}}" {% if term.year == year %}selected{% endif %}>{{year}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--Errors-->
         {% for error in errors %}
-            <div class="alert alert-{{ error.alert_type }}" role="alert">
-                {% autoescape off %}{{ error }}{% endautoescape %}
-            </div>
+        <div class="alert alert-{{ error.alert_type }}" role="alert">
+            {% autoescape off %}{{ error }}{% endautoescape %}
+        </div>
         {% endfor %}
         <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2">
-                <button type="submit" class="btn btn-primary">Sign up</button>
+            <div class="{{field_class}}">
+                <button type="submit" class="btn btn-primary">Add term</button>
             </div>
         </div>
     </form>
