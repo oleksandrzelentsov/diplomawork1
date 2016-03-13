@@ -31,6 +31,8 @@
             <div class="alert alert-{{ error.alert_type }}" role="alert">
                 {% autoescape off %}{{ error }}{% endautoescape %}
             </div>
+        {% empty %}
+            <p class="text">Have no <i>Voter</i> account? <a href="/register/">Sign up</a>.</p>
         {% endfor %}
         <div class="row">
             <div class="{{field_class}}">

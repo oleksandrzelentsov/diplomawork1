@@ -107,7 +107,7 @@ class LoginFormValidator(FormValidator):
         if self.user is None:
             # return the same page with errors if no
             self._errors.append(
-                Alert('<b>%s!</b> Wrong authentication data. %s' % (get_random_magic_word(), self.form_data()), 'danger'))
+                Alert('<b>%s!</b> Wrong authentication data.' % (get_random_magic_word()), 'danger'))
         elif not self.user.is_active:
             msg = Alert(
                 '<b>%s! Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % (
@@ -141,10 +141,10 @@ class AddTermFormValidator(FormValidator):
                     get_random_magic_word(), AddTermFormValidator.min_term_name_length,
                     AddTermFormValidator.max_term_name_length)
                 self._errors.append(Alert(msg))
-                # TODO forbid special characters in name
 
     # def validate_definition(self):
     #     if 'definition' in self._arguments.keys():
+    # TODO validate definition, author and year
 
     def errors(self):
         self.validate_term_name()
