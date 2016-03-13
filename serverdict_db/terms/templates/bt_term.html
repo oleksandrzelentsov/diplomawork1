@@ -1,0 +1,100 @@
+{% extends "bt_base.html" %}
+{% block title %}{{term.name}} - Voter{% endblock %}
+{% block main_content %}
+<div class="container">
+    <div class="page-header">
+        <h2>
+            {{ term.name }}<br>
+            <small>in {{ term.category }}</small>
+        </h2>
+    </div>
+
+    <p class="lead">
+        <span class="justify">{{term.name}} &mdash; {{term.definition}}</span>
+    </p>
+
+    <!--<ul class="list-group">
+        <li class="list-group-item"><span class="badge">{{term.date_added}}</span>
+            <h4 class="list-group-item-heading">Date added</h4>
+            <p class="list-group-item-text">When the term has been added to <i>Voter</i>.</p>
+        </li>
+        <li class="list-group-item">{% if not term.user.is_superuser %}<span class="badge">User-defined</span>{% else %}<span class="badge"><i>Voter</i> choice</span>{% endif %}
+            <h4 class="list-group-item-heading">Type</h4>
+            <p class="list-group-item-text">Who added the term.</p>
+        </li>
+        {% if not term.user.is_superuser %}
+        <li class="list-group-item"><span class="badge">{{term.user.first_name}} {{term.user.last_name}}</span>
+            <h4 class="list-group-item-heading">User</h4>
+            <p class="list-group-item-text">User&apos;s full name.</p>
+        </li>
+        {% endif %}
+        {% if term.author %}
+        <li class="list-group-item"><span class="badge">{{term.author}}</span>
+            <h4 class="list-group-item-heading">Author</h4>
+            <p class="list-group-item-text">Who invented the term.</p>
+        </li>
+        {% endif %}
+        {% if term.year %}
+        <li class="list-group-item"><span class="badge">{{term.year}}</span>
+            <h4 class="list-group-item-heading">Year</h4>
+            <p class="list-group-item-text">The year of invention.</p>
+        </li>
+        {% endif %}
+    </ul>
+-->
+    <table class="table table-condensed">
+        <tbody>
+            <!--Date added-->
+            <tr>
+                <td>
+                    <h4>Date added<br><small>When the term has been added to <i>Voter</i>.</small></h4>
+                </td>
+                <td class="lead text-right">{{term.date_added}}</td>
+            </tr>
+            <!--Type-->
+            <tr>
+                <td>
+                    <h4>Type<br><small>Who added the term.</small></h4>
+                </td>
+                <td class="lead text-right">
+                    {% if not term.user.is_superuser %}<span class="label label-info">User-defined</span>{% else %}<span class="label label-primary"><i>Voter</i> choice</span>{% endif %}
+                </td>
+            </tr>
+            <!--User-->
+            {% if not term.user.is_superuser %}
+            <tr>
+                <td>
+                    <h4>User<br><small>User&apos;s full name.</small></h4>
+                </td>
+                <td class="lead text-right">
+                    {{term.user.first_name}} {{term.user.last_name}}
+                </td>
+            </tr>
+            {% endif %}
+            <!--Author-->
+            {% if term.author %}
+            <tr>
+                <td>
+                    <h4>Author<br><small>Who invented the term.</small></h4>
+                </td>
+                <td class="lead text-right">
+                    {{term.author}}
+                </td>
+            </tr>
+            {% endif %}
+            <!--Year-->
+            {% if term.year %}
+            <tr>
+                <td>
+                    <h4>Year<br><small>The year of invention.</small></h4>
+                </td>
+                <td class="lead text-right">
+                    {{term.year}}
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

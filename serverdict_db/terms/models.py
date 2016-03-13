@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User, AnonymousUser
-from datetime import datetime
+from django.db import models
+
+
 # Create your models here.
 
 
@@ -29,16 +30,31 @@ class Term(models.Model):
     year = models.IntegerField(blank=True, null=True)
     public = models.BooleanField(default=False)
     accessibility = models.ManyToManyField(User, related_name="granted_users", blank=True)
-    date_added = models.DateTimeField(datetime.now())
+    date_added = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name + (" [%s]" % self.category)
+
+    def make_public(self):
+        """Called when the term is so approved that it's time to
+        make it public."""
+        self.public = True
+        self.accessibility.clear()
+
+    def reset(self):
+        """Called when the term is edited and is losing all it's
+        popularity due to updating fields."""
+        self.public = False
+        self.accessibility.clear()
+        self.accessibility.add(self.user)
 
     def grant_access(self, *users):
         for user in users:
             if user not in self.accessibility.all() and user is not self.user:
                 self.accessibility.add(user)
                 self.popularity += 1
+                if self.popularity > Term.average_popularity():
+                    self.make_public()
                 self.save()
 
     def forbid_access(self, *users):
@@ -49,6 +65,14 @@ class Term(models.Model):
                 self.save()
             elif user is self.user:
                 self.delete()
+
+    def is_accessible(self, user: User):
+        if self.public:
+            return True
+        elif user in self.accessibility.all():
+            return True
+        else:
+            return False
 
     @staticmethod
     def average_popularity(selector=lambda x: True):
@@ -65,7 +89,7 @@ class Term(models.Model):
         if isinstance(user, AnonymousUser) or user is None:
             return result
         private = [x for x in Term.objects.all() if not x.public]
-        result += [x for x in private if user in x.accesibility.all()]
+        result += [x for x in private if user in x.accessibility.all()]
         return result
 
 

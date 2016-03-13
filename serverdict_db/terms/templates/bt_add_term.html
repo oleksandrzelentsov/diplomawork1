@@ -11,10 +11,10 @@
         <div class="row">
             <div class="{{field_class}}">
                 <div class="form-group">
-                    <label for="nm">
+                    <label for="term_name">
                         <span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Name:
                     </label>
-                    <input type="text" class="form-control" name="name" id="nm" value="{{ term.name }}"/>
+                    <input type="text" class="form-control" name="term_name" id="term_name" value="{{ term.name }}"/>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
         <div class="row">
             <div class="{{field_class}}">
                 <div class="form-group">
-                    <label for="nm">
+                    <label for="definition">
                         <span class="glyphicon glyphicon-asterisk" style="color:red;"></span> Definition:
                     </label>
                     <textarea rows="10" style="resize: vertical;" class="form-control" name="definition" id="definition">{{ term.definition }}</textarea>
@@ -38,7 +38,7 @@
                     </label>
                     <select class="form-control" id="category">
                         {% for category in categories %}
-                        <option value="{{ category.id }}" {% if term.category == category %}selected{% endif %}>{{category}}</option>
+                        <option value="{{ category.id }}" {% if term.category.id == category.id %}selected{% endif %}>{{category}}</option>
                         {% endfor %}
                     </select>
                 </div>

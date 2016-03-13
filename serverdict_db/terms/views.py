@@ -21,7 +21,8 @@ def index(request):
 def terms(request):
     if request.method == 'GET':
         nav = NavigationItem.get_navigation(request, 0)
-        c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS}
+        current_user = request.user
+        c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
         return HttpResponse(get_template("bt_terms.html").render(context=c_dict, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -32,9 +33,10 @@ def login(request):
         return HttpResponseRedirect('/')
     template_name = 'bt_login_form.html'
     nav = NavigationItem.get_navigation(request, 1)
+    current_user = request.user
     if request.method == 'GET':
         return HttpResponse(
-                get_template(template_name).render(context={'navigation_items': nav, 'field_class': FORM_FIELD_CLASS},
+                get_template(template_name).render(context={'navigation_items': nav, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user},
                                                    request=request))
     elif request.method == 'POST':
         # check data
@@ -42,10 +44,11 @@ def login(request):
 
         errors = form_validator.errors()
 
+        current_user = request.user
         if errors:
             # return the same page with errors if no
-            context = {'navigation_items': nav, 'username': request.POST['username'],
-                       'errors': errors, 'field_class': FORM_FIELD_CLASS}
+            context = {'navigation_items': nav, 'username': form_validator.form_data()['username'],
+                       'errors': errors, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
             # authorize if yes and redirect to main page
@@ -62,19 +65,21 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 
-def error(request: HttpRequest, message: str, redirect=None):
+def error(request, message: str, redirect=None):
     nav = NavigationItem.get_navigation(request)
+    current_user = request.user
     return HttpResponse(get_template('bt_error.html').render(
             context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
-                     'field_class': FORM_FIELD_CLASS},
+                     'field_class': FORM_FIELD_CLASS, 'current_user': current_user},
             request=request))
 
 
-def success(request: HttpRequest, message: str, redirect=None):
+def success(request, message: str, redirect=None):
     nav = NavigationItem.get_navigation(request)
+    current_user = request.user
     return HttpResponse(get_template('bt_error.html').render(context={'alert': Alert(message, 'success'),
                                                                       'navigation_items': nav, 'redirect': redirect,
-                                                                      'field_class': FORM_FIELD_CLASS},
+                                                                      'field_class': FORM_FIELD_CLASS, 'current_user': current_user},
                                                              request=request))
 
 
@@ -110,24 +115,34 @@ def register(request):
 def add_term(request):
     template_name = 'bt_add_term.html'
     nav = NavigationItem.get_navigation(request, 2)
+    current_user = request.user
     if request.method == 'GET':
         categories = Category.objects.all()
-
-        class Year:
-            def __init__(self, numeric, string_representation):
-                self.string_representation = string_representation
-                self.numeric = numeric
-
-            def __str__(self):
-                return self.string_representation
-
         years = [Year(int(-x * 1e+3), '%.1f hundred years BC' % x) for x in
                  list(list([y * 0.5 for y in range(1, 22)])[::-1])]
         years += [Year(x, str(x)) for x in (list(range(datetime.now().year + 1)))]
         years = years[::-1]
-        context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS}
+        context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
         return HttpResponse(get_template(template_name).render(context=context, request=request))
     elif request.method == 'POST':
         pass
+    else:
+        return error(request, '%s method is not allowed for this page' % request.method)
+
+
+def term(request, term_id):
+    template_name = 'bt_term.html'
+    nav = NavigationItem.get_navigation(request)
+    current_user = request.user
+    if request.method == 'GET':
+        term_ = Term.objects.get(pk=term_id)
+        if term_:
+            if term_.is_accessible(request.user):
+                context = {'navigation_items': nav, 'term': term_, 'current_user': current_user}
+                return HttpResponse(get_template(template_name).render(context=context, request=request))
+            else:
+                return error(request, 'Sorry, you don\'t have access to this page')
+        else:
+            return error(request, 'no such term with id %i' % term_id)
     else:
         return error(request, '%s method is not allowed for this page' % request.method)

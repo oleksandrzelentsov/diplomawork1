@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^terms/$', views.terms),
     url(r'^terms/add/$', views.add_term),
-    # url(r'^terms/[0-9]+/', views.term),
+    url(r'^terms/([0-9]+)/', views.term),
     # url(r'^terms/[0-9]+/delete', views.delete_term),
     # url(r'^terms/[0-9]+/share', views.share),
     url(r'^logout/$', views.logout),
