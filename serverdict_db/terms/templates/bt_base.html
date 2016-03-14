@@ -1,84 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        {% load staticfiles %}
-        <title>{% block title %}Helloworld{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta charset="utf-8" />
-        <link http-equiv="X-UA-Compatible" content="IE=edge">
-        <!-- client-side scripting -->
-        <script type="text/javascript" src="{% static "js/jquery-2.2.1.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
-        <!-- styles -->
-        <link rel="stylesheet" href="{% static "style/bootstrap.min.css" %}" />
-        <script type="text/javascript" src="{% static "js/app.js" %}"></script>
-        {% block optional_header %}
-        {% endblock %}
-    </head>
-    <div class="container">
-        <!-- .navbar-fixed-top, or .navbar-fixed-bottom can be added to keep the nav bar fixed on the screen -->
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
+<head>
+    <title>{% block title %}Helloworld{% endblock %}</title>
+    {% include "default_header.html" %}
+    {% block optional_header %}{% endblock %}
+</head>
+<div class="container">
+    <!-- .navbar-fixed-top, or .navbar-fixed-bottom can be added to keep the nav bar fixed on the screen -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-              <!-- Button that toggles the navbar on and off on small screens -->
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-              <!-- Hides information from screen readers -->
-                <span class="sr-only"></span>
-                <!-- Draws 3 bars in navbar button when in small mode -->
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
+                <!-- Button that toggles the navbar on and off on small screens -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <!-- Hides information from screen readers -->
+                    <span class="sr-only"></span>
+                    <!-- Draws 3 bars in navbar button when in small mode -->
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                {% for navigation_item in navigation_items %}
+                <ul class="nav navbar-nav">
+                    {% for navigation_item in navigation_items %}
                     {% if navigation_item.active %}
-                        <li class="active">
-                            <a href="{{ navigation_item.href }}">
-                                {% autoescape off %}{{ navigation_item.text }}{% endautoescape %} <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
+                    <li class="active">
+                        <a href="{{ navigation_item.href }}">
+                            {% autoescape off %}{{ navigation_item.text }}{% endautoescape %} <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
                     {% else %}
-                        <li>
-                            <a href="{{ navigation_item.href }}">
-                                {% autoescape off %}{{ navigation_item.text }}{% endautoescape %}
-                            </a>
-                        </li>
+                    <li>
+                        <a href="{{ navigation_item.href }}">
+                            {% autoescape off %}{{ navigation_item.text }}{% endautoescape %}
+                        </a>
+                    </li>
                     {% endif %}
-                {% endfor %}
-              </ul>
-              <!-- navbar-left will move the search to the left -->
-              <form class="navbar-form navbar-right" role="search">
-                <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="basic-addon1"><span class='glyphicon glyphicon-search'></span></span>
-                  <input type="text" class="form-control" placeholder="Search" disabled>
+                    {% endfor %}
+                </ul>
+                <!-- navbar-left will move the search to the left -->
+                <form action="/search/" method="get" class="navbar-form navbar-right" role="search" id="search-form">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon" id="basic-addon1"><span
+                                class='glyphicon glyphicon-search'></span></span>
+                        <input type="text" class="form-control" placeholder="Search" name="name" value="{{name}}">
                   <span class="input-group-btn">
-                      <button type="submit" class="btn btn-default" disabled >Go!</button>
+                      <button type="submit" class="btn btn-default">Go!</button>
                   </span>
-                </div>
-              </form>
+                    </div>
+                </form>
             </div><!-- /.navbar-collapse -->
-          </div><!-- /.container-fluid -->
-        </nav>
-        </div>
-    <body class="body">
-        {% block main_content %}
-        {% endblock %}
-        {% block footer %}
-        <div class="container">
-        {% if current_user.is_authenticated %}
-        <p class="text text-info text-right">You are logged in as {{current_user.first_name}} {{current_user.last_name}}</p>
-        {% else %}
-            <p class="text-primary">
-                <h1 align="center">Get your <u>Voter</u>. Today.</h1>
-                <br>
-            </p>
-        {% endif %}
-        </div>
-        {% endblock %}
-    </body>
+        </div><!-- /.container-fluid -->
+    </nav>
+</div>
+<body class="body">
+{% block main_content %}
+{% endblock %}
+{% block footer %}
+<div class="container">
+    {% if current_user.is_authenticated %}
+    <p class="text text-info text-right">You are logged in as {{current_user.first_name}} {{current_user.last_name}}</p>
+    {% else %}
+    <p class="text-center text-primary">
+    <h1 align="center">Get your <u>Voter</u>. Today.</h1>
+    <br>
+    </p>
+    {% endif %}
+</div>
+{% endblock %}
+</body>
 </html>

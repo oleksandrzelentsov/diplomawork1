@@ -1,0 +1,15 @@
+{% for term in terms %}
+    <div class="panel panel-default" >
+        <div class="panel-body">
+            <h3>
+                <a href="/terms/{{ term.id }}">
+                    {{ term.name }}
+                </a>
+                <br>
+                <small>
+                    {{ term.category }}
+                </small>
+            </h3>
+        </div>
+    </div>
+{% endfor %}

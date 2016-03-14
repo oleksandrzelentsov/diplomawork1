@@ -127,7 +127,7 @@ class LoginFormValidator(FormValidator):
 
 class AddTermFormValidator(FormValidator):
     max_term_name_length = 128
-    min_term_name_length = 8
+    min_term_name_length = 2
     max_definition_length = 500
     min_definition_length = 10
 

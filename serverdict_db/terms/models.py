@@ -67,9 +67,7 @@ class Term(models.Model):
                 self.delete()
 
     def is_accessible(self, user: User):
-        if self.public:
-            return True
-        elif user in self.accessibility.all():
+        if self.public or user in self.accessibility.all() or user.is_superuser:
             return True
         else:
             return False
@@ -85,6 +83,8 @@ class Term(models.Model):
 
     @staticmethod
     def get_terms(user):
+        if user.is_superuser:
+            return Term.objects.all()
         result = [x for x in Term.objects.all() if x.public]
         if isinstance(user, AnonymousUser) or user is None:
             return result

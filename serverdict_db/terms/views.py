@@ -17,12 +17,32 @@ def index(request):
     return HttpResponseRedirect('/terms')
 
 
-def terms(request):
+def search(request):
+    nav = NavigationItem.get_navigation(request)
+    current_user = request.user
+    context = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+               'current_user': current_user}
     if request.method == 'GET':
-        nav = NavigationItem.get_navigation(request, 0)
-        current_user = request.user
-        c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
-                  'current_user': current_user}
+        name = request.GET.get('name')
+        category = request.GET.get('category')
+        if not (name or category):
+            return HttpResponseRedirect('/')
+        else:
+            categories = Category.objects.all()
+            context.update({'name': name, 'categories': categories})
+            if category:
+                context.update({'category': int(category), })
+        return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
+    else:
+        return error(request, '%s method is not allowed for this page' % request.method)
+
+
+def terms(request):
+    nav = NavigationItem.get_navigation(request, 0)
+    current_user = request.user
+    c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+              'current_user': current_user}
+    if request.method == 'GET':
         return HttpResponse(get_template("bt_terms.html").render(context=c_dict, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -34,11 +54,11 @@ def login(request):
     template_name = 'bt_login_form.html'
     nav = NavigationItem.get_navigation(request, 1)
     current_user = request.user
+    context = {'navigation_items': nav, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
     if request.method == 'GET':
         return HttpResponse(
                 get_template(template_name).render(
-                        context={'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
-                                 'current_user': current_user},
+                        context=context,
                         request=request))
     elif request.method == 'POST':
         form_validator = LoginFormValidator(**dict(request.POST))
@@ -68,7 +88,7 @@ def error(request, message: str, redirect=None):
     current_user = request.user
     return HttpResponse(get_template('bt_error.html').render(
             context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
-                     'field_class': FORM_FIELD_CLASS, 'current_user': current_user},
+                     'field_class': FORM_FIELD_CLASS, 'current_user': current_user, 'title': 'Error'},
             request=request))
 
 
@@ -78,7 +98,8 @@ def success(request, message: str, redirect=None):
     return HttpResponse(get_template('bt_error.html').render(context={'alert': Alert(message, 'success'),
                                                                       'navigation_items': nav, 'redirect': redirect,
                                                                       'field_class': FORM_FIELD_CLASS,
-                                                                      'current_user': current_user},
+                                                                      'current_user': current_user,
+                                                                      'title': 'Success'},
                                                              request=request))
 
 
@@ -121,7 +142,7 @@ def add_term(request):
     for i in special_authors:
         authors.remove(i)
     years = [Year(int(-x * 1e+3), '%.1f hundred years BC' % x) for x in
-             list(list([y * 0.5 for y in range(1, 22)])[::-1])]
+             list([y * 0.5 for y in range(1, 22)])[::-1]]
     years += [Year(x, str(x)) for x in (list(range(datetime.now().year + 1)))]
     years = years[::-1]
     years = [Year('', 'Unknown')] + years
@@ -136,11 +157,11 @@ def add_term(request):
             context.update({'errors': errors})
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
-            new_term = Term.objects.create(date_added=datetime.now(), **form_validator.form_data())
-            if request.user.is_superuser:
+            new_term = Term.objects.create(date_added=datetime.now(), user=current_user, **form_validator.form_data())
+            if current_user.is_superuser:
                 new_term.public = True
             else:
-                new_term.accessibility.add(request.user)
+                new_term.accessibility.add(current_user)
             new_term.save()
             return success(request, '<h3>Success</h3>creating term.', redirect={'url': '/', 'time': 5})
     else:

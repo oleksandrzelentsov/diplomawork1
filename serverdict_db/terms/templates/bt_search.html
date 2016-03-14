@@ -1,0 +1,21 @@
+{% extends "bt_base.html" %}
+{% block title %}Term search - Voter{% endblock %}
+{% block main_content %}
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3>Filters</h3>
+        </div>
+        <div class="panel-body">
+            <div class="lead">Category:</div>
+            <select form="search-form" name="category">
+                <option value="" {% if not category %}selected{% endif %}>---------------------------</option>
+                {% for c in categories %}
+                <option value="{{ c.id }}" {% if c.id == category %}selected{% endif %}>{{c}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    {% include "terms.html" %}
+</div>
+{% endblock %}
