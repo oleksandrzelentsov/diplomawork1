@@ -4,6 +4,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
 
@@ -30,8 +31,13 @@ def search(request):
         else:
             categories = Category.objects.all()
             context.update({'name': name, 'categories': categories})
+            if name:
+                context.update({'terms': Term.objects.filter(
+                        Q(name__icontains=context['name'].lower()) | Q(definition__icontains=context['name'].lower()))})
             if category:
-                context.update({'category': int(category), })
+                context.update({'category': int(category)})
+                context.update({'terms': context['terms'].filter(
+                                    Q(category__exact=Category.objects.get(pk=context['category'])))})
         return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -40,10 +46,10 @@ def search(request):
 def terms(request):
     nav = NavigationItem.get_navigation(request, 0)
     current_user = request.user
-    c_dict = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
-              'current_user': current_user}
+    context = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+               'current_user': current_user}
     if request.method == 'GET':
-        return HttpResponse(get_template("bt_terms.html").render(context=c_dict, request=request))
+        return HttpResponse(get_template("bt_terms.html").render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
@@ -52,9 +58,9 @@ def login(request):
     if not isinstance(request.user, AnonymousUser):
         return HttpResponseRedirect('/')
     template_name = 'bt_login_form.html'
-    nav = NavigationItem.get_navigation(request, 1)
+    navigation_items = NavigationItem.get_navigation(request, 1)
     current_user = request.user
-    context = {'navigation_items': nav, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
+    context = {'navigation_items': navigation_items, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
     if request.method == 'GET':
         return HttpResponse(
                 get_template(template_name).render(
@@ -66,7 +72,7 @@ def login(request):
         current_user = request.user
         if errors:
             # return the same page with errors if no
-            context = {'navigation_items': nav, 'username': form_validator.form_data()['username'],
+            context = {'navigation_items': navigation_items, 'username': form_validator.form_data()['username'],
                        'errors': errors, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
@@ -95,11 +101,12 @@ def error(request, message: str, redirect=None):
 def success(request, message: str, redirect=None):
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
-    return HttpResponse(get_template('bt_error.html').render(context={'alert': Alert(message, 'success'),
-                                                                      'navigation_items': nav, 'redirect': redirect,
-                                                                      'field_class': FORM_FIELD_CLASS,
-                                                                      'current_user': current_user,
-                                                                      'title': 'Success'},
+    context = {'alert': Alert(message, 'success'),
+               'navigation_items': nav, 'redirect': redirect,
+               'field_class': FORM_FIELD_CLASS,
+               'current_user': current_user,
+               'title': 'Success'}
+    return HttpResponse(get_template('bt_error.html').render(context=context,
                                                              request=request))
 
 
