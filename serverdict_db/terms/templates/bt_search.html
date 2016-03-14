@@ -4,16 +4,35 @@
 <div class="container">
     <div class="panel panel-info">
         <div class="panel-heading">
-            <h3>Filters</h3>
+            Filters
         </div>
         <div class="panel-body">
-            <div class="lead">Category:</div>
-            <select form="search-form" name="category">
-                <option value="" {% if not category %}selected{% endif %}>---------------------------</option>
-                {% for c in categories %}
-                <option value="{{ c.id }}" {% if c.id == category %}selected{% endif %}>{{c}}</option>
-                {% endfor %}
-            </select>
+            <form id="search-form" role="form">
+                <div class="row" style="margin: 0 15px;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">Name:</label><br>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="name" id="name" value="{{ name }}"/>
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary">Go!</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="category">Category:</label><br>
+                            <select class="form-control" name="category" id="category">
+                                <option value="" {% if not category %}selected{% endif %}>---------------------------</option>
+                                {% for c in categories %}
+                                <option value="{{ c.id }}" {% if c.id == category %}selected{% endif %}>{{c}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     {% include "terms.html" %}
