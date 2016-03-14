@@ -1,5 +1,19 @@
 {% extends "bt_base.html" %}
 {% block title %}{{term.name}} - Voter{% endblock %}
+
+{% block optional_header %}
+<style>
+    td.lead.text-right {
+        vertical-align: middle;
+    }
+
+    td.lead.text-right > .label {
+        font-size: 100%;
+    }
+
+</style>
+{% endblock %}
+
 {% block main_content %}
 <div class="container">
     <div class="page-header">
@@ -57,7 +71,11 @@
                     <h4>Type<br><small>Who added the term.</small></h4>
                 </td>
                 <td class="lead text-right">
-                    {% if not term.user.is_superuser %}<span class="label label-info">User-defined</span>{% else %}<span class="label label-primary"><i>Voter</i> choice</span>{% endif %}
+                    {% if not term.user.is_superuser %}
+                    <span class="label label-info">User-defined</span>
+                    {% else %}
+                    <span class="label label-primary"><i>Voter</i> choice</span>
+                    {% endif %}
                 </td>
             </tr>
             <!--User-->
@@ -95,6 +113,5 @@
             {% endif %}
         </tbody>
     </table>
-
 </div>
 {% endblock %}

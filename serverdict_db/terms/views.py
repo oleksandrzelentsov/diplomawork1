@@ -1,14 +1,13 @@
 from datetime import datetime
 
-from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
 
-from serverdict_db.settings import ADMIN_EMAIL, FORM_FIELD_CLASS
+from serverdict_db.settings import FORM_FIELD_CLASS
 from terms.models import Term, Category, Author
 from terms.mypackage.html_helper import *
 from terms.mypackage.validation import RegisterFormValidator, LoginFormValidator, AddTermFormValidator
