@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1c873ab1-5acf-423a-9a58-1fdc6e2bcb3a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/terms/migrations/0001_initial.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/terms/migrations/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/serverdict_db.iml" afterPath="$PROJECT_DIR$/.idea/serverdict_db.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fixtures/auth.json" afterPath="$PROJECT_DIR$/fixtures/auth.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fixtures/terms.json" afterPath="$PROJECT_DIR$/fixtures/terms.json" />
     </list>
     <ignored path="serverdict_db.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -37,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/terms/models.py">
+      <file leaf-file-name="urls.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/serverdict_db/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1641791">
-              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.37587413">
+              <caret line="24" column="11" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
               <folding />
             </state>
           </provider>
@@ -144,8 +142,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -262,6 +258,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -278,7 +276,7 @@
       </console-settings>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Run public server">
+  <component name="RunManager" selected="Compound.Make fixtures">
     <configuration default="true" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
       <method />
     </configuration>
@@ -402,21 +400,6 @@
       <option name="params" value="" />
       <option name="USE_PARAM" value="false" />
       <option name="USE_KEYWORD" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Load fixtures" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
-      <toRun type="PythonConfigurationType" name="Load auth fixtures" />
-      <toRun type="PythonConfigurationType" name="Load terms fixtures" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Migration" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
-      <toRun type="PythonConfigurationType" name="Make migrations" />
-      <toRun type="PythonConfigurationType" name="Migrate" />
-      <method />
-    </configuration>
-    <configuration default="false" name="Make fixtures" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
-      <toRun type="PythonConfigurationType" name="Make auth fixtures" />
-      <toRun type="PythonConfigurationType" name="Make terms fixtures" />
       <method />
     </configuration>
     <configuration default="false" name="Run server" type="PythonConfigurationType" factoryName="Python" folderName="Run server" singleton="true" show_console_on_std_out="true" show_console_on_std_err="true">
@@ -557,18 +540,33 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
+    <configuration default="false" name="Load fixtures" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
+      <toRun type="PythonConfigurationType" name="Load auth fixtures" />
+      <toRun type="PythonConfigurationType" name="Load terms fixtures" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Migration" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
+      <toRun type="PythonConfigurationType" name="Make migrations" />
+      <toRun type="PythonConfigurationType" name="Migrate" />
+      <method />
+    </configuration>
+    <configuration default="false" name="Make fixtures" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
+      <toRun type="PythonConfigurationType" name="Make auth fixtures" />
+      <toRun type="PythonConfigurationType" name="Make terms fixtures" />
+      <method />
+    </configuration>
     <list size="11">
-      <item index="0" class="java.lang.String" itemvalue="Compound.Load fixtures" />
-      <item index="1" class="java.lang.String" itemvalue="Compound.Migration" />
-      <item index="2" class="java.lang.String" itemvalue="Compound.Make fixtures" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Run server" />
-      <item index="4" class="java.lang.String" itemvalue="Python.Run public server" />
-      <item index="5" class="java.lang.String" itemvalue="Python.Load terms fixtures" />
-      <item index="6" class="java.lang.String" itemvalue="Python.Load auth fixtures" />
-      <item index="7" class="java.lang.String" itemvalue="Python.Make terms fixtures" />
-      <item index="8" class="java.lang.String" itemvalue="Python.Make auth fixtures" />
-      <item index="9" class="java.lang.String" itemvalue="Python.Migrate" />
-      <item index="10" class="java.lang.String" itemvalue="Python.Make migrations" />
+      <item index="0" class="java.lang.String" itemvalue="Python.Run server" />
+      <item index="1" class="java.lang.String" itemvalue="Python.Run public server" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Load terms fixtures" />
+      <item index="3" class="java.lang.String" itemvalue="Python.Load auth fixtures" />
+      <item index="4" class="java.lang.String" itemvalue="Python.Make terms fixtures" />
+      <item index="5" class="java.lang.String" itemvalue="Python.Make auth fixtures" />
+      <item index="6" class="java.lang.String" itemvalue="Python.Migrate" />
+      <item index="7" class="java.lang.String" itemvalue="Python.Make migrations" />
+      <item index="8" class="java.lang.String" itemvalue="Compound.Load fixtures" />
+      <item index="9" class="java.lang.String" itemvalue="Compound.Migration" />
+      <item index="10" class="java.lang.String" itemvalue="Compound.Make fixtures" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -642,7 +640,13 @@
       <option name="project" value="LOCAL" />
       <updated>1457980533661</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added valid migrations">
+      <created>1457989441244</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1457989441244</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -658,12 +662,12 @@
     <frame x="1671" y="-9" width="1384" height="738" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16764276" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1669107" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289256" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289256" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3289256" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28099173" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28099173" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -721,7 +725,8 @@
     <MESSAGE value="moved table contents to center on term page&#10;" />
     <MESSAGE value="refactoring + search control point" />
     <MESSAGE value="done with search page design" />
-    <option name="LAST_COMMIT_MESSAGE" value="done with search page design" />
+    <MESSAGE value="added valid migrations" />
+    <option name="LAST_COMMIT_MESSAGE" value="added valid migrations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1014,13 +1019,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverdict_db/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5334773">
-          <caret line="24" column="11" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/terms/templates/terms.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.041284405">
@@ -1080,6 +1078,21 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/serverdict_db/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.5874126">
+          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/terms/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6923077">
+          <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/terms/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1088,18 +1101,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/serverdict_db/settings.py">
+    <entry file="file://$PROJECT_DIR$/serverdict_db/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.5874126">
-          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/terms/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1641791">
-          <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.37587413">
+          <caret line="24" column="11" selection-start-line="24" selection-start-column="11" selection-end-line="24" selection-end-column="11" />
           <folding />
         </state>
       </provider>
