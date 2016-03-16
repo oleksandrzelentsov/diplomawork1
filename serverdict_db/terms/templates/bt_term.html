@@ -18,8 +18,14 @@
 <div class="container">
     <div class="page-header">
         <h2>
-            {{ term.name }}<br>
-            <small>in {{ term.category }}</small>
+            {{ term.name }}
+            <br>
+            <small>in <a class="text text-muted" href="/search/?category={{term.category.id}}">{{ term.category }}</a></small>
+            {% if current_user == term.user or current_user.is_superuser %}
+            <br>
+            <a href="edit" class="text text-info"><span style="font-size:20px;" class="glyphicon glyphicon-pencil"></span></a>
+            <a href="delete" class="text text-danger"><span style="font-size:20px;" class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
         </h2>
     </div>
 

@@ -133,7 +133,7 @@ def register(request):
             return HttpResponse(get_template(template_name).render(context=leftover, request=request))
         else:
             User.objects.create_user(**form_validator.form_data())
-            return success(request, '<h3>Success</h3>creating user.', redirect={'url': '/', 'time': 5})
+            return success(request, '<h3>Success</h3>creating user.', redirect={'url': '/', 'time': 4})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
@@ -176,6 +176,7 @@ def add_term(request):
 
 
 def term(request, term_id):
+    # TODO [BUG] year proper display
     template_name = 'bt_term.html'
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
@@ -191,3 +192,19 @@ def term(request, term_id):
             return error(request, 'no such term with id %i' % term_id)
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
+
+
+def delete_term(request, term_id):
+    template_name = 'bt_term_deletion.html'
+    term_ = Term.objects.get(pk=term_id)
+    if request.method == 'GET':
+        if not term_:
+            return error(request, 'Sorry, this page does not exist.')
+        if request.user.is_superuser or request.user == term_.user:
+            navigation_items = NavigationItem.get_navigation(request)
+            context = {'navigation_items': navigation_items, 'term': term_, 'current_user': request.user}
+            return HttpResponse(get_template(template_name).render(request=request, context=context))
+    elif request.method == 'POST':
+        if term_:
+            term_.delete()
+            return success(request, 'You have deleted your term!', {'time': 4, 'url': '/'})

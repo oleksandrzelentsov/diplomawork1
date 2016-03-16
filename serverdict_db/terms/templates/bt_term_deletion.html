@@ -1,0 +1,30 @@
+{% extends "bt_base.html" %}
+{% block title %}Confirm term deletion - Voter{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <form role="form" action="" method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-6">
+                <div class="lead text-justify">
+                    Do you really want to <span class="text text-danger">delete</span> a term "{{ term.name }}"?
+                    <br><span class="text text-warning"><b>Warning!</b> This action cannot be reverted.</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-2 col-md-2 col-lg-1">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+            <div class="col-xs-6 col-sm-2 col-md-2 col-lg-1">
+                <a href="/terms/{{term.id}}/">
+                    <button type="button" class="btn btn-default">Cancel</button>
+                </a>
+            </div>
+        </div>
+    </form>
+    <br>
+    <br>
+</div>
+{% endblock %}

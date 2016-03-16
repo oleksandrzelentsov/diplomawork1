@@ -52,6 +52,7 @@
                         Author:
                     </label>
                     <select class="form-control" name="author" id="author">
+                        <option value="">Unknown author</option>
                         {% for author in special_authors %}
                         <option value="{{author.id}}" {% if term.author.id == author.id %}selected{% endif %}>{{author}}</option>
                         {% endfor %}

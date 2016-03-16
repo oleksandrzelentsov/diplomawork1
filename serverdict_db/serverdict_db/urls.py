@@ -25,12 +25,12 @@ urlpatterns = [
     url(r'^search/', views.search),
     url(r'^terms/add/$', views.add_term),
     url(r'^terms/([0-9]+)/$', views.term),
-    # url(r'^terms/[0-9]+/delete', views.delete_term),
-    # url(r'^terms/[0-9]+/share', views.share),
+    url(r'^terms/([0-9]+)/delete', views.delete_term),
+    # url(r'^terms/([0-9]+)/share', views.share),
     url(r'^logout/$', views.logout),
     url(r'^login/$', views.login),
     url(r'^register/$', views.register),
 
     # REST API:
-    url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
+    # url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
 ]
