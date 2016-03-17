@@ -1,0 +1,9 @@
+{% extends "bt_base.html" %}
+{% block title %}Statistics - Voter{% endblock %}
+{% block main_content %}
+<div class="container">
+    {% autoescape off %}
+    {{ plot }}
+    {% endautoescape %}
+</div>
+{% endblock %}

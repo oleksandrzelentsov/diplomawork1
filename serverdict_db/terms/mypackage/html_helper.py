@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.models import AnonymousUser
+from plotly import offline
 import random
 
 magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow', 'Whoa', 'Whaat?']
@@ -85,3 +86,30 @@ class Year:
         years = Year.get_years()
         value = [x for x in years if str(x) == str_][0]
         return value
+
+
+class Charts:
+    @staticmethod
+    def get_test():
+        def my_range(first, last=None, step=1.0):
+            if last is None:
+                last = first
+                first = 0
+            i = first
+            while i <= last:
+                yield i
+                i += step
+
+        x = list(my_range(-10, 10, 1e-3))
+
+        return offline.plot({
+            "data": [
+                {
+                    'x': x,
+                    'y': list(map(lambda arg: arg ** 3, x))
+                }
+            ],
+            "layout": {
+                'title': "hello world"
+            }
+        }, auto_open=False, output_type='div', show_link=False)

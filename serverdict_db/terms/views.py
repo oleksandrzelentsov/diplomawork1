@@ -206,3 +206,12 @@ def delete_term(request, term_id):
         if term_:
             term_.delete()
             return success(request, 'You have deleted your term!', {'time': 3, 'url': '/'})
+
+
+def statistics(request):
+    template_name = 'bt_statistics.html'
+    nav = NavigationItem.get_navigation(request)
+    current_user = request.user
+    plot = Charts.get_test()
+    context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot}
+    return HttpResponse(get_template(template_name).render(request=request, context=context))
