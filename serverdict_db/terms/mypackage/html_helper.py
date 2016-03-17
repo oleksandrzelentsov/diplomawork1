@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import AnonymousUser
 import random
 
@@ -62,3 +64,24 @@ class Year:
 
     def __str__(self):
         return self.string_representation
+
+    @staticmethod
+    def get_years():
+        years = [Year(int(-x * 1e+3), '%.1f hundred years BC' % x) for x in
+                 list([y * 0.5 for y in range(1, 22)])[::-1]]
+        years += [Year(x, str(x)) for x in (list(range(datetime.now().year + 1)))]
+        years = years[::-1]
+        years = [Year('', 'Unknown')] + years
+        return years
+
+    @staticmethod
+    def get_string_by_value(value):
+        years = Year.get_years()
+        str_ = [x for x in years if x.numeric == value][0]
+        return str_
+
+    @staticmethod
+    def get_value_by_string(str_):
+        years = Year.get_years()
+        value = [x for x in years if str(x) == str_][0]
+        return value

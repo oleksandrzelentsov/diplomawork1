@@ -13,7 +13,7 @@
                         <div class="form-group">
                             <label for="name">Pages containing:</label><br>
                             <div class="input-group">
-                                <input type="text" class="form-control" name="name" id="name" value="{{ name }}"/>
+                                <input type="text" class="form-control" name="name" id="name" value="{% if name %}{{ name }}{% endif %}"/>
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary">Go!</button>
                                 </span>

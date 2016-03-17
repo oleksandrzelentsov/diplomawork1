@@ -133,7 +133,7 @@ def register(request):
             return HttpResponse(get_template(template_name).render(context=leftover, request=request))
         else:
             User.objects.create_user(**form_validator.form_data())
-            return success(request, '<h3>Success</h3>creating user.', redirect={'url': '/', 'time': 4})
+            return success(request, '<h3>Success</h3>creating user.', redirect={'url': '/', 'time': 3})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
@@ -148,11 +148,7 @@ def add_term(request):
     special_authors = list(filter(lambda x: 'author' in x.name.lower(), authors))
     for i in special_authors:
         authors.remove(i)
-    years = [Year(int(-x * 1e+3), '%.1f hundred years BC' % x) for x in
-             list([y * 0.5 for y in range(1, 22)])[::-1]]
-    years += [Year(x, str(x)) for x in (list(range(datetime.now().year + 1)))]
-    years = years[::-1]
-    years = [Year('', 'Unknown')] + years
+    years = Year.get_years()
     context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user, 'authors': authors, 'special_authors': special_authors}
     if request.method == 'GET':
@@ -170,13 +166,12 @@ def add_term(request):
             else:
                 new_term.accessibility.add(current_user)
             new_term.save()
-            return success(request, '<h3>Success</h3>creating term.', redirect={'url': '/', 'time': 5})
+            return success(request, '<h3>Success</h3>creating term.', redirect={'url': '/', 'time': 3})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
 
 def term(request, term_id):
-    # TODO [BUG] year proper display
     template_name = 'bt_term.html'
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
@@ -184,6 +179,9 @@ def term(request, term_id):
         term_ = Term.objects.get(pk=term_id)
         if term_:
             if term_.is_accessible(request.user):
+                if term_.year:
+                    print(term_.year)
+                    term_.year = Year.get_string_by_value(term_.year)
                 context = {'navigation_items': nav, 'term': term_, 'current_user': current_user}
                 return HttpResponse(get_template(template_name).render(context=context, request=request))
             else:
@@ -207,4 +205,4 @@ def delete_term(request, term_id):
     elif request.method == 'POST':
         if term_:
             term_.delete()
-            return success(request, 'You have deleted your term!', {'time': 4, 'url': '/'})
+            return success(request, 'You have deleted your term!', {'time': 3, 'url': '/'})

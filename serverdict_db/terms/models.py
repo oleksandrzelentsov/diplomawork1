@@ -3,6 +3,7 @@ from django.db import models
 
 
 # Create your models here.
+from django.db.models import Q
 
 
 class Author(models.Model):
@@ -85,11 +86,7 @@ class Term(models.Model):
     def get_terms(user):
         if user.is_superuser:
             return Term.objects.all()
-        result = [x for x in Term.objects.all() if x.public]
-        if isinstance(user, AnonymousUser) or user is None:
-            return result
-        private = [x for x in Term.objects.all() if not x.public]
-        result += [x for x in private if user in x.accessibility.all()]
+        result = Term.objects.filter(Q(public__exact=True) | Q(accessibility__in=[user.id]))
         return result
 
 
