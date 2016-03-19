@@ -232,6 +232,6 @@ def confirm(request, term_id):
         if not term_:
             return error(request, '<h3>No such term with id=%i!</h3>' % term_id)
         term_.grant_access(request.user)
-        return HttpResponseRedirect('/terms/%s/' % term_id)
+        return success(request, 'Term successfully confirmed!', redirect={'url': '/terms/%s/' % term_id, 'time': 3})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
