@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
@@ -9,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
 
 from serverdict_db.settings import FORM_FIELD_CLASS
-from terms.models import Term, Category, Author
+from terms.models import Term, Author
 from terms.mypackage.html_helper import *
 from terms.mypackage.validation import RegisterFormValidator, LoginFormValidator, AddTermFormValidator
 
@@ -37,7 +35,7 @@ def search(request):
             if category:
                 context.update({'category': int(category)})
                 context.update({'terms': context['terms'].filter(
-                                    Q(category__exact=Category.objects.get(pk=context['category'])))})
+                        Q(category__exact=Category.objects.get(pk=context['category'])))})
         return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -210,8 +208,8 @@ def delete_term(request, term_id):
 
 def statistics(request):
     template_name = 'bt_statistics.html'
-    nav = NavigationItem.get_navigation(request)
+    nav = NavigationItem.get_navigation(request, -1)
     current_user = request.user
-    plot = Charts.get_test()
+    plot = Charts.get_terms_count_by_category(Term.get_terms(request.user))
     context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot}
     return HttpResponse(get_template(template_name).render(request=request, context=context))

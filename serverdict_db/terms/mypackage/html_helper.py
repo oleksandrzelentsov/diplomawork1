@@ -4,6 +4,8 @@ from django.contrib.auth.models import AnonymousUser
 from plotly import offline
 import random
 
+from terms.models import Category
+
 magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow', 'Whoa', 'Whaat?']
 random.shuffle(magic_words)
 current_index = 0
@@ -20,7 +22,7 @@ class NavigationItem:
         self.text, self.href, self.active = text, href, active
 
     @staticmethod
-    def get_navigation(request, active_index=-1):
+    def get_navigation(request, active_index=None):
         nav = [NavigationItem('<span class="glyphicon glyphicon-home"></span> Home', '/terms')]
         if isinstance(request.user, AnonymousUser):
             nav += [NavigationItem('<span class="glyphicon glyphicon-user"></span> Log in', '/login/'),
@@ -30,8 +32,8 @@ class NavigationItem:
                     NavigationItem('<span class="glyphicon glyphicon-plus"></span> Add term', '/terms/add')]
             if request.user.is_staff:
                 nav += [NavigationItem('<span class="glyphicon glyphicon-wrench"></span> Administration', '/admin')]
-
-        if 0 <= active_index < len(nav):
+        nav += [NavigationItem('<span class="glyphicon glyphicon-stats"></span> Statistics', '/statistics/')]
+        if active_index:
             nav[active_index].active = True
         return nav
 
@@ -89,6 +91,26 @@ class Year:
 
 
 class Charts:
+    default_args = {'auto_open': False, 'output_type': 'div', 'show_link': False}
+
+    @staticmethod
+    def get_terms_count_by_category(terms):
+        all_categories = Category.objects.all()
+        data = [(cat, len(terms.filter(category__exact=cat))) for cat in all_categories]
+        data.sort(key=lambda x: str(x[0]))
+        return offline.plot({
+            "data": [
+                {
+                    'labels': [str(a[0]) for a in data],
+                    'values': [a[1] for a in data],
+                    'type': 'pie'
+                }
+            ],
+            "layout": {
+                'title': "Terms count by category"
+            }
+        }, **Charts.default_args)
+
     @staticmethod
     def get_test():
         def my_range(first, last=None, step=1.0):
@@ -96,7 +118,7 @@ class Charts:
                 last = first
                 first = 0
             i = first
-            while i <= last:
+            while i < last:
                 yield i
                 i += step
 
@@ -112,4 +134,4 @@ class Charts:
             "layout": {
                 'title': "hello world"
             }
-        }, auto_open=False, output_type='div', show_link=False)
+        }, **Charts.default_args)
