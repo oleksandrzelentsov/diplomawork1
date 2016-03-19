@@ -78,3 +78,4 @@ target/
 ehthumbs.db
 Thumbs.db
 **/*~
+.idea

@@ -44,7 +44,7 @@ def search(request):
 def terms(request):
     nav = NavigationItem.get_navigation(request, 0)
     current_user = request.user
-    context = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+    context = {'terms': Term.get_terms(request.user).order_by('-date_added'), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user}
     if request.method == 'GET':
         return HttpResponse(get_template("bt_terms.html").render(context=context, request=request))
