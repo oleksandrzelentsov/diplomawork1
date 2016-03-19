@@ -77,11 +77,7 @@
                     <h4>Type<br><small>Who added the term.</small></h4>
                 </td>
                 <td class="lead text-right">
-                    {% if not term.user.is_superuser %}
-                    <span class="label label-info">User-defined</span>
-                    {% else %}
-                    <span class="label label-primary"><i>Voter</i> choice</span>
-                    {% endif %}
+                    {% include "term_origin.html" with user=term.user %}
                 </td>
             </tr>
             <!--User-->
@@ -117,6 +113,30 @@
                 </td>
             </tr>
             {% endif %}
+            {% if not term.public %}
+            <tr>
+                <td>
+                    <h4>Popularity<br><small>How many people confirmed this term.</small></h4>
+                </td>
+                <td class="lead text-right text-danger">
+                    {{term.popularity}}
+                </td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td>
+                    <h4>Visibility<br><small>Who is this term visible to.</small></h4>
+                </td>
+                <td class="lead text-right text-info">
+                    <ul class="list-inline">
+                    {% for user in term.accessibility.all %}
+                        <li>{{ user.first_name }} {{ user.last_name }}</li>
+                    {% empty %}
+                        <div class="text-success">Public</div>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

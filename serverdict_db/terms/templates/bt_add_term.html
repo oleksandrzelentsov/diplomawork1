@@ -86,10 +86,21 @@
         </div>
         {% endfor %}
         <div class="row">
+            {% if not terms %}
             <div class="{{field_class}}">
                 <button type="submit" class="btn btn-primary">Add term</button>
             </div>
+            {% else %}
+            <input type="hidden" name="confirm" value="confirm">
+            <div class="{{field_class}}">
+                <button type="submit" class="btn btn-primary">Use my term</button>
+            </div>
+            {% endif %}
         </div>
     </form>
+    <br>
+    {% if terms %}
+    {% include "confirmation.html" %}
+    {% endif %}
 </div>
 {% endblock %}

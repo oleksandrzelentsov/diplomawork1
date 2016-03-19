@@ -182,6 +182,12 @@ class AddTermFormValidator(FormValidator):
                 msg = Alert('<b>%s</b> Can\'t find such category.' % (get_random_magic_word()))
                 self._errors.append(msg)
 
+    def form_data(self):
+        v = super().form_data()
+        if 'confirm' in v.keys():
+            del v['confirm']
+        return v
+
     def errors(self):
         self.validate_term_name()
         self.validate_definition()

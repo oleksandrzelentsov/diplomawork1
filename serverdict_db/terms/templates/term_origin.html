@@ -1,0 +1,7 @@
+<h3>
+{% if not user.is_superuser %}
+<span class="label label-info">User-defined</span>
+{% else %}
+<span class="label label-primary"><i>Voter</i> choice</span>
+{% endif %}
+</h3>

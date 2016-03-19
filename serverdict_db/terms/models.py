@@ -56,16 +56,19 @@ class Term(models.Model):
                 self.popularity += 1
                 if self.popularity > Term.average_popularity():
                     self.make_public()
-                self.save()
+                    self.save()
+                    return
+        self.save()
 
     def forbid_access(self, *users):
         for user in users:
             if user in self.accessibility.all():
                 self.accessibility.remove(user)
                 self.popularity -= 1
-                self.save()
             elif user is self.user:
                 self.delete()
+                return
+        self.save()
 
     def is_accessible(self, user: User):
         if self.public or user in self.accessibility.all() or user.is_superuser:

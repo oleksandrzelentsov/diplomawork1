@@ -141,11 +141,9 @@ def add_term(request):
     template_name = 'bt_add_term.html'
     nav = NavigationItem.get_navigation(request, 2)
     current_user = request.user
-    categories = sorted(Category.objects.all(), key=lambda x: x.name)
-    authors = list(sorted(Author.objects.all(), key=lambda x: x.name))
-    special_authors = list(filter(lambda x: 'author' in x.name.lower(), authors))
-    for i in special_authors:
-        authors.remove(i)
+    categories = Category.objects.all()
+    authors = Author.objects.filter(~Q(name__icontains='author')).order_by("name")
+    special_authors = authors.filter(name__icontains='author')
     years = Year.get_years()
     context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user, 'authors': authors, 'special_authors': special_authors}
@@ -158,13 +156,25 @@ def add_term(request):
             context.update({'errors': errors})
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
-            new_term = Term.objects.create(date_added=datetime.now(), user=current_user, **form_validator.form_data())
-            if current_user.is_superuser:
-                new_term.public = True
+            forbidden_users = User.objects.filter(Q(is_superuser__exact=True) | Q(id__exact=request.user.id))
+            similar_terms = Term.objects.filter((Q(name__icontains=form_validator.form_data()['name']) | Q(
+                    definition__icontains=form_validator.form_data()['name'])) & ~Q(user__in=forbidden_users) & Q(
+                public__exact=False))
+            if not similar_terms or request.POST.get('confirm'):
+                new_term = Term.objects.create(date_added=datetime.now(), user=current_user,
+                                               **form_validator.form_data())
+                if current_user.is_superuser:
+                    new_term.public = True
+                else:
+                    new_term.accessibility.add(current_user)
+                new_term.save()
+                return success(request, '<h3>Success</h3>creating term.<br>Page will redirect in 3 seconds.',
+                               redirect={'url': '/', 'time': 3})
             else:
-                new_term.accessibility.add(current_user)
-            new_term.save()
-            return success(request, '<h3>Success</h3>creating term.', redirect={'url': '/', 'time': 3})
+                # template_name = "confirmation.html"
+                context.update({'terms': similar_terms})
+                context.update(form_validator.form_data())
+                return HttpResponse(get_template(template_name).render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
 
@@ -213,3 +223,15 @@ def statistics(request):
     plot = Charts.get_terms_count_by_category(Term.get_terms(request.user))
     context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot}
     return HttpResponse(get_template(template_name).render(request=request, context=context))
+
+
+@login_required(login_url='/login/')
+def confirm(request, term_id):
+    if request.method == 'POST':
+        term_ = Term.objects.get(pk=term_id)
+        if not term_:
+            return error(request, '<h3>No such term with id=%i!</h3>' % term_id)
+        term_.grant_access(request.user)
+        return HttpResponseRedirect('/terms/%s/' % term_id)
+    else:
+        return error(request, '%s method is not allowed for this page' % request.method)
