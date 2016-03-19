@@ -1,0 +1,14 @@
+{% if pager %}
+<ul class="pager">
+    {% if pager.page_number != 0 %}
+    <li class="previous"><a href="{{pager.urls.previous}}">Previous</a></li>
+    {% else %}
+    <!--<li class="previous disabled">Previous</li>-->
+    {% endif %}
+    {% if pager.page_number < pager|length|add:-1 %}
+    <li class="next"><a href="{{pager.urls.next}}">Next</a></li>
+    {% else %}
+    <!--<li class="next disabled">Next</li>-->
+    {% endif %}
+</ul>
+{% endif %}

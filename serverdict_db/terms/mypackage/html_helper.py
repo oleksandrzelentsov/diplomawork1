@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth.models import AnonymousUser
+from math import ceil
 from plotly import offline
 import random
 
@@ -90,15 +91,60 @@ class Year:
         return value
 
 
+class Pager:
+    def __init__(self, *objects, split_number=7, page_number=0):
+        self.page_number = page_number
+        self.split_number = split_number
+        self.objects = objects
+
+    def __len__(self):
+        return ceil(len(self.objects) / self.split_number)
+
+    def current_page(self):
+        return self[self.page_number]
+
+    def __getitem__(self, index):
+        if len(self) >= index >= 0:
+            if index != len(self) - 1:
+                return self.objects[(index * self.split_number):((index + 1) * self.split_number)]
+            else:
+                return self.objects[(index * self.split_number):]
+        else:
+            return self[(len(self) + index) % len(self)]
+
+
+class TermsPagePager(Pager):
+    def __init__(self, *objects, split_number=7, page_number=0, previous_url=None, next_url=None, current_url=None):
+        super().__init__(*objects, split_number=split_number, page_number=page_number)
+        if not previous_url:
+            previous_url = '/terms/?page=%i' % (page_number - 1)
+        if not next_url:
+            next_url = '/terms/?page=%i' % (page_number + 1)
+        if not current_url:
+            current_url = '/terms/?page=%i' % page_number
+        self.urls = {'previous': previous_url, 'next': next_url, 'current': current_url}
+
+
 class Charts:
     default_args = {'auto_open': False, 'output_type': 'div', 'show_link': False}
 
     @staticmethod
     def get_terms_count_by_category(terms):
+        import time
+        all_cats_query_time_begin = time.time()
         all_categories = Category.objects.all()
+        all_cats_query_time_end = time.time()
+        print("all cats query time:", all_cats_query_time_end - all_cats_query_time_begin)
+        data_creation_begin = time.time()
         data = [(cat, len(terms.filter(category__exact=cat))) for cat in all_categories]
+        data_creation_end = time.time()
+        print('data creation time:', data_creation_end - data_creation_begin)
+        data_sorting_begin = time.time()
         data.sort(key=lambda x: str(x[0]))
-        return offline.plot({
+        data_sorting_end = time.time()
+        print('data sorting time:', data_sorting_end - data_sorting_begin)
+        plot_begin = time.time()
+        plot_ = offline.plot({
             "data": [
                 {
                     'labels': [str(a[0]) for a in data],
@@ -110,6 +156,9 @@ class Charts:
                 'title': "Terms count by category"
             }
         }, **Charts.default_args)
+        plot_end = time.time()
+        print('plot time:', plot_end - plot_begin)
+        return plot_
 
     @staticmethod
     def get_test():

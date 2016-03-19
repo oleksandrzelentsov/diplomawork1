@@ -44,9 +44,19 @@ def search(request):
 def terms(request):
     nav = NavigationItem.get_navigation(request, 0)
     current_user = request.user
-    context = {'terms': Term.get_terms(request.user).order_by('-date_added'), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+    context = {'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user}
     if request.method == 'GET':
+        terms_ = Term.get_terms(request.user).order_by('-date_added')
+        page_number = None
+        if request.GET.get('page'):
+            try:
+                page_number = int(request.GET.get('page'))
+            except:
+                page_number = 0
+                print('failed setting page number')
+        pager = TermsPagePager(*terms_, page_number=page_number if page_number else 0)
+        context.update({'terms': pager.current_page(), 'pager': pager})
         return HttpResponse(get_template("bt_terms.html").render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -188,7 +198,6 @@ def term(request, term_id):
         if term_:
             if term_.is_accessible(request.user):
                 if term_.year:
-                    print(term_.year)
                     term_.year = Year.get_string_by_value(term_.year)
                 context = {'navigation_items': nav, 'term': term_, 'current_user': current_user}
                 return HttpResponse(get_template(template_name).render(context=context, request=request))
