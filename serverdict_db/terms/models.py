@@ -36,11 +36,21 @@ class Term(models.Model):
     def __str__(self):
         return self.name + (" [%s]" % self.category)
 
+    def recalculate_publicity(self):
+        if self.popularity > Term.average_popularity():
+            self.make_public()
+        else:
+            self.make_private()
+
     def make_public(self):
         """Called when the term is so approved that it's time to
         make it public."""
         self.public = True
-        self.accessibility.clear()
+        self.save()
+
+    def make_private(self):
+        self.public = False
+        self.save()
 
     def reset_term(self):
         """Called when the term is edited and is losing all it's
@@ -50,6 +60,7 @@ class Term(models.Model):
             self.popularity = 0
             self.accessibility.clear()
             self.grant_access(self.user)
+            self.recalculate_publicity()
         else:
             self.make_public()
 
@@ -58,10 +69,7 @@ class Term(models.Model):
             if user not in self.accessibility.all():
                 self.accessibility.add(user)
                 self.popularity += 1
-                if self.popularity > Term.average_popularity():
-                    self.make_public()
-                    self.save()
-                    return
+        self.recalculate_publicity()
         self.save()
 
     def forbid_access(self, *users):
@@ -83,7 +91,7 @@ class Term(models.Model):
     @staticmethod
     def average_popularity(selector=lambda x: True):
         coll = [x.popularity for x in Term.objects.all() if selector(x)]
-        return sum(coll)/len(coll)
+        return (max(coll) + min(coll))/2
 
     @staticmethod
     def private_popularity():
