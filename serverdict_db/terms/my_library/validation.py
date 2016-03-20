@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from serverdict_db.settings import ADMIN_EMAIL
 from terms.models import Author, Category
-from terms.mypackage.html_helper import Alert, get_random_magic_word
+from terms.my_library.html_helper import Alert, get_random_magic_word
 
 
 class FormValidator:
@@ -52,16 +52,16 @@ class FormValidator:
             self._arguments['username'] = self._arguments['username'].strip()
             if not re.match(FormValidator.username_regex, self._arguments['username']):
                 self._errors.append(Alert(
-                    '<b>%s!</b> Username "%s" is not valid.' % (
-                        get_random_magic_word(), self._arguments['username'])))
+                        '<b>%s!</b> Username "%s" is not valid.' % (
+                            get_random_magic_word(), self._arguments['username'])))
 
     def validate_email(self):
         if 'email' in self._arguments.keys():
             self._arguments['email'] = self._arguments['email'].strip()
             if not re.match(FormValidator.email_regex, self._arguments['email']):
                 self._errors.append(
-                    Alert('<b>%s!</b> E-mail "%s" is not valid.' % (
-                        get_random_magic_word(), self._arguments['email'])))
+                        Alert('<b>%s!</b> E-mail "%s" is not valid.' % (
+                            get_random_magic_word(), self._arguments['email'])))
 
     def format_args(self):
         if 'username' in self._arguments.keys():
@@ -80,16 +80,16 @@ class RegisterFormValidator(FormValidator):
         if 'email' in self._arguments.keys():
             if self._arguments['email'] in [x.email for x in User.objects.all()]:
                 self._errors.append(
-                    Alert('<b>%s!</b> User with e-mail %s already exists.' % (
-                        get_random_magic_word(), self._arguments['email'])))
+                        Alert('<b>%s!</b> User with e-mail %s already exists.' % (
+                            get_random_magic_word(), self._arguments['email'])))
 
     def validate_username(self):
         super().validate_username()
         if 'username' in self._arguments.keys():
             if self._arguments['username'] in [x.username for x in User.objects.all()]:
                 self._errors.append(
-                    Alert('<b>%s!</b> User with username "%s" already exists.' % (
-                        get_random_magic_word(), self._arguments['username'])))
+                        Alert('<b>%s!</b> User with username "%s" already exists.' % (
+                            get_random_magic_word(), self._arguments['username'])))
 
     def errors(self):
         necessary_parameters = (
@@ -104,19 +104,20 @@ class RegisterFormValidator(FormValidator):
 class LoginFormValidator(FormValidator):
     def __init__(self, **validation_kwargs):
         super().__init__(remove_lists=True, **validation_kwargs)
-        self._arguments['user'] = authenticate(username=self.form_data()['username'], password=self.form_data()['password'])
+        self._arguments['user'] = authenticate(username=self.form_data()['username'],
+                                               password=self.form_data()['password'])
 
     def validate_user(self):
         # user = authenticate(username=self._arguments['username'], password=self._arguments['password'])
         if not self._arguments['user']:
             # return the same page with errors if no
             self._errors.append(
-                Alert('<b>%s!</b> Wrong authentication data.' % (get_random_magic_word()), 'danger'))
+                    Alert('<b>%s!</b> Wrong authentication data.' % (get_random_magic_word()), 'danger'))
         elif not self._arguments['user'].is_active:
             msg = Alert(
-                '<b>%s! Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % (
-                    get_random_magic_word(), ADMIN_EMAIL) +
-                'admin</a> to resolve this issue.')
+                    '<b>%s! Sorry!</b> This user is disabled. Contact <a href="mailto:%s">' % (
+                        get_random_magic_word(), ADMIN_EMAIL) +
+                    'admin</a> to resolve this issue.')
             self._errors.append(msg)
 
     def errors(self):
@@ -141,7 +142,7 @@ class AddTermFormValidator(FormValidator):
             try:
                 self._arguments['author'] = Author.objects.get(pk=int(self._arguments['author']))
             except:
-                self._arguments['author'] = ''
+                del self._arguments['author']
         else:
             self._arguments['author'] = ''
         if 'category' in self._arguments.keys():
@@ -161,7 +162,7 @@ class AddTermFormValidator(FormValidator):
                     get_random_magic_word(), AddTermFormValidator.min_term_name_length,
                     AddTermFormValidator.max_term_name_length)
                 self._errors.append(Alert(msg))
-# TODO validate definition, author and year
+            # TODO validate definition, author and year
 
     def validate_definition(self):
         if 'definition' in self._arguments.keys():
@@ -194,3 +195,27 @@ class AddTermFormValidator(FormValidator):
         self.validate_definition()
         self.validate_category()
         return self._errors
+
+
+class EditTermFormValidator(AddTermFormValidator):
+    def format_args(self):
+        print('formatting arguments')
+        if 'name' in self._arguments.keys():
+            self._arguments['name'] = self._arguments['name'].strip()
+        if 'definition' in self._arguments.keys():
+            self._arguments['definition'] = self._arguments['definition'].strip()
+        if 'author' in self._arguments.keys():
+            try:
+                self._arguments['author'] = Author.objects.get(pk=int(self._arguments['author']))
+            except:
+                self._arguments['author'] = ''
+        else:
+            self._arguments['author'] = ''
+        if 'category' in self._arguments.keys():
+            try:
+                self._arguments['category'] = Category.objects.get(pk=int(self._arguments['category']))
+            except:
+                self._arguments['category'] = None
+        if 'year' in self._arguments.keys():
+            if self._arguments['year'] == '':
+                del self._arguments['year']

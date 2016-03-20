@@ -15,22 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from terms import views
+from terms.views import misc, terms, auth
 
 urlpatterns = [
-    url(r'^$', views.index),
+    url(r'^$', misc.index),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^terms/$', views.terms),
-    url(r'^search/', views.search),
-    url(r'^terms/add/$', views.add_term),
-    url(r'^terms/([0-9]+)/$', views.term),
-    url(r'^terms/([0-9]+)/delete/$', views.delete_term),
-    url(r'^terms/([0-9]+)/edit/$', views.edit_term),
-    url(r'^terms/([0-9]+)/confirm/$', views.confirm),
-    url(r'^logout/$', views.logout),
-    url(r'^login/$', views.login),
-    url(r'^register/$', views.register),
-    url(r'^statistics/$', views.statistics)
+    url(r'^terms/$', terms.terms),
+    url(r'^search/', terms.search),
+    url(r'^terms/add/$', terms.add_term),
+    url(r'^terms/([0-9]+)/$', terms.term),
+    url(r'^terms/([0-9]+)/delete/$', terms.delete_term),
+    url(r'^terms/([0-9]+)/edit/$', terms.edit_term),
+    url(r'^terms/([0-9]+)/confirm/$', terms.confirm_term),
+    url(r'^logout/$', auth.logout),
+    url(r'^login/$', auth.login),
+    url(r'^register/$', auth.register),
+    url(r'^statistics/$', misc.statistics)
 
     # REST API:
     # url(r'^api/get/([a-zA-Z_][a-zA-Z0-9]*)', api.get),
