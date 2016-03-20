@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^terms/$', terms.terms),
     url(r'^search/', terms.search),
     url(r'^terms/add/$', terms.add_term),
-    url(r'^terms/([0-9]+)/$', terms.term),
+    url(r'^terms/([0-9]+)/$', terms.view_term),
     url(r'^terms/([0-9]+)/delete/$', terms.delete_term),
     url(r'^terms/([0-9]+)/edit/$', terms.edit_term),
     url(r'^terms/([0-9]+)/confirm/$', terms.confirm_term),

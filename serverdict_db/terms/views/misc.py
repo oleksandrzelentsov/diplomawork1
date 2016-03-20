@@ -3,7 +3,7 @@ from django.template.loader import get_template
 
 from serverdict_db.settings import FORM_FIELD_CLASS
 from terms.models import Term
-from terms.my_library.charts import TermsCountByCategoryChart
+from terms.my_library.charts import TermsCountByCategoryChart, TermsPopularityChart
 from terms.my_library.html_helper import NavigationItem, Alert
 
 
@@ -36,7 +36,9 @@ def statistics(request):
     template_name = 'bt_statistics.html'
     nav = NavigationItem.get_navigation(request, -1)
     current_user = request.user
-    chart = TermsCountByCategoryChart(Term.get_terms(request.user))
-    plot = chart.get_plot()
-    context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot}
+    chart_by_category = TermsCountByCategoryChart(Term.get_terms(request.user))
+    plot_ = chart_by_category.get_plot()
+    chart_popularity = TermsPopularityChart(Term.get_terms(request.user))
+    plot_ += chart_popularity.get_plot()
+    context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot_}
     return HttpResponse(get_template(template_name).render(request=request, context=context))

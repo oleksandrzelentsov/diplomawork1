@@ -36,7 +36,6 @@ def search(request):
                 context.update({'category': int(category)})
                 context.update({'terms': context['terms'].filter(
                         Q(category__exact=Category.objects.get(pk=context['category'])))})
-            # super_users = User.objects.filter(is_superuser__exact=True)
             context.update({'terms': context['terms'].filter((Q(public__exact=True) | Q(accessibility__in=[current_user.id])))})
         return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
     else:
@@ -146,7 +145,7 @@ def add_term(request):
         return error(request, '%s method is not allowed for this page' % request.method)
 
 
-def term(request, term_id):
+def view_term(request, term_id):
     template_name = 'bt_term.html'
     nav = NavigationItem.get_navigation(request)
     current_user = request.user

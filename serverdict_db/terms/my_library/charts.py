@@ -1,6 +1,11 @@
 from abc import abstractmethod
-from plotly.offline import offline
-from terms.models import Category
+from statistics import mean
+
+import plotly
+import plotly.graph_objs as go
+from plotly.offline import plot
+
+from terms.models import Category, Term
 
 
 class Chart:
@@ -24,7 +29,7 @@ class CubicParabolaPlot(Chart):
 
         x = list(my_range(-10, 10, 1e-3))
 
-        return offline.plot({
+        return plotly.offline.plot({
             "data": [
                 {
                     'x': x,
@@ -37,37 +42,71 @@ class CubicParabolaPlot(Chart):
         }, **Chart.default_args)
 
 
-class TermsCountByCategoryChart(Chart):
+class TermsChart(Chart):
+    @abstractmethod
+    def get_plot(self):
+        pass
+
     def __init__(self, terms):
         self.terms = terms
 
+
+class TermsCountByCategoryChart(TermsChart):
+    # def get_plot(self):
+    #     import time
+    #     all_cats_query_time_begin = time.time()
+    #     all_categories = Category.objects.all()
+    #     all_cats_query_time_end = time.time()
+    #     print("all cats query time:", all_cats_query_time_end - all_cats_query_time_begin)
+    #     data_creation_begin = time.time()
+    #     data = [(cat, len(self.terms.filter(category__exact=cat))) for cat in all_categories]
+    #     data_creation_end = time.time()
+    #     print('data creation time:', data_creation_end - data_creation_begin)
+    #     data_sorting_begin = time.time()
+    #     data.sort(key=lambda x: str(x[0]))
+    #     data_sorting_end = time.time()
+    #     print('data sorting time:', data_sorting_end - data_sorting_begin)
+    #     plot_begin = time.time()
+    #     plot_ = plotly.offline.plot({
+    #         "data": [
+    #             {
+    #                 'labels': [str(a[0]) for a in data],
+    #                 'values': [a[1] for a in data],
+    #                 'type': 'pie'
+    #             }
+    #         ],
+    #         "layout": {
+    #             'title': "Terms count by category"
+    #         }
+    #     }, **Chart.default_args)
+    #     plot_end = time.time()
+    #     print('plot time:', plot_end - plot_begin)
+    #     return plot_
     def get_plot(self):
-        import time
-        all_cats_query_time_begin = time.time()
-        all_categories = Category.objects.all()
-        all_cats_query_time_end = time.time()
-        print("all cats query time:", all_cats_query_time_end - all_cats_query_time_begin)
-        data_creation_begin = time.time()
-        data = [(cat, len(self.terms.filter(category__exact=cat))) for cat in all_categories]
-        data_creation_end = time.time()
-        print('data creation time:', data_creation_end - data_creation_begin)
-        data_sorting_begin = time.time()
-        data.sort(key=lambda x: str(x[0]))
-        data_sorting_end = time.time()
-        print('data sorting time:', data_sorting_end - data_sorting_begin)
-        plot_begin = time.time()
-        plot_ = offline.plot({
-            "data": [
-                {
-                    'labels': [str(a[0]) for a in data],
-                    'values': [a[1] for a in data],
-                    'type': 'pie'
-                }
-            ],
-            "layout": {
-                'title': "Terms count by category"
-            }
-        }, **Chart.default_args)
-        plot_end = time.time()
-        print('plot time:', plot_end - plot_begin)
+        return ''
+
+
+class TermsPopularityChart(TermsChart):
+    def get_plot(self):
+        print([(x, x.popularity) for x in self.terms])
+        different_popularities = {x.popularity for x in self.terms}
+        terms_by_pop = []
+        for i in different_popularities:
+            terms_by_pop.append(len(self.terms.filter(popularity__exact=i)))
+        trace1 = go.Histogram(
+                x=terms_by_pop, name='term popularity',
+                opacity=0.5, histnorm='count'
+        )
+        trace2 = go.Histogram(
+                y=[mean([x.popularity for x in self.terms])], name='average term popularity',
+                opacity=0.5
+        )
+        data = [trace1, trace2]
+        layout = go.Layout(
+                barmode='overlay',
+                # bargap=0.25,
+                # bargroupgap=0.3
+        )
+        fig = go.Figure(data=data, layout=layout)
+        plot_ = plot(fig, **Chart.default_args)
         return plot_

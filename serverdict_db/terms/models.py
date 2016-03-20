@@ -90,6 +90,10 @@ class Term(models.Model):
         return Term.average_popularity(lambda x: not x.public)
 
     @staticmethod
+    def user_popularity(user):
+        return Term.average_popularity(lambda term: term.is_accessible(user))
+
+    @staticmethod
     def get_terms(user):
         if user.is_superuser:
             return Term.objects.all()
