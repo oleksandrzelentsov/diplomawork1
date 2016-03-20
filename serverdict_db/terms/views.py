@@ -29,8 +29,9 @@ def search(request):
             return HttpResponseRedirect('/')
         else:
             categories = Category.objects.all()
-            context.update({'name': name, 'categories': categories})
+            context.update({'categories': categories})
             if name:
+                context.update({'name': name})
                 context.update({'terms': Term.objects.filter(
                     Q(name__icontains=context['name'].lower()) | Q(definition__icontains=context['name'].lower()))})
             if category:
