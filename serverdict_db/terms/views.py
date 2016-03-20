@@ -17,6 +17,7 @@ def index(request):
 
 
 def search(request):
+    # TODO create filters of "my terms", "user-defined terms" and "Voter choice terms"
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
     context = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
@@ -31,11 +32,11 @@ def search(request):
             context.update({'name': name, 'categories': categories})
             if name:
                 context.update({'terms': Term.objects.filter(
-                        Q(name__icontains=context['name'].lower()) | Q(definition__icontains=context['name'].lower()))})
+                    Q(name__icontains=context['name'].lower()) | Q(definition__icontains=context['name'].lower()))})
             if category:
                 context.update({'category': int(category)})
                 context.update({'terms': context['terms'].filter(
-                        Q(category__exact=Category.objects.get(pk=context['category'])))})
+                    Q(category__exact=Category.objects.get(pk=context['category'])))})
         return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -71,9 +72,9 @@ def login(request):
     context = {'navigation_items': navigation_items, 'field_class': FORM_FIELD_CLASS, 'current_user': current_user}
     if request.method == 'GET':
         return HttpResponse(
-                get_template(template_name).render(
-                        context=context,
-                        request=request))
+            get_template(template_name).render(
+                context=context,
+                request=request))
     elif request.method == 'POST':
         form_validator = LoginFormValidator(**dict(request.POST))
         errors = form_validator.errors()
@@ -101,9 +102,9 @@ def error(request, message: str, redirect=None):
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
     return HttpResponse(get_template('bt_error.html').render(
-            context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
-                     'field_class': FORM_FIELD_CLASS, 'current_user': current_user, 'title': 'Error'},
-            request=request))
+        context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
+                 'field_class': FORM_FIELD_CLASS, 'current_user': current_user, 'title': 'Error'},
+        request=request))
 
 
 def success(request, message: str, redirect=None):
@@ -147,6 +148,43 @@ def register(request):
 
 
 @login_required(login_url='/login/')
+def edit_term(request, term_id):
+    term_to_edit = Term.objects.get(pk=term_id)
+    if not term_to_edit:
+        return error(request, 'term not found')
+    template_name = 'bt_edit_term.html'
+    nav = NavigationItem.get_navigation(request, 2)
+    current_user = request.user
+    categories = Category.objects.all()
+    authors = Author.objects.filter(~Q(name__icontains='author')).order_by("name")
+    special_authors = authors.filter(name__icontains='author')
+    years = Year.get_years()
+    context = {'navigation_items': nav, 'categories': categories, 'years': years, 'field_class': FORM_FIELD_CLASS,
+               'current_user': current_user, 'authors': authors, 'special_authors': special_authors, 'term': term_to_edit}
+    if request.method == 'GET':
+        return HttpResponse(get_template(template_name).render(context=context, request=request))
+    elif request.method == 'POST':
+        form_validator = AddTermFormValidator(**dict(request.POST))
+        errors = form_validator.errors()
+        if errors:
+            context.update({'errors': errors})
+            return HttpResponse(get_template(template_name).render(context=context, request=request))
+        else:
+            model_args = {}
+            author = form_validator.form_data()['author']
+            if author:
+                term_to_edit.author = author
+            elif author == '':
+                term_to_edit.author = None
+            term_to_edit.category = form_validator.form_data()['category']
+            term_to_edit.name = form_validator.form_data()['name']
+            term_to_edit.definition = form_validator.form_data()['definition']
+            term_to_edit.reset_term()
+            term_to_edit.save()
+            return success(request, 'updating term %s with %s' % (term_to_edit, form_validator.form_data()))
+
+
+@login_required(login_url='/login/')
 def add_term(request):
     template_name = 'bt_add_term.html'
     nav = NavigationItem.get_navigation(request, 2)
@@ -168,7 +206,7 @@ def add_term(request):
         else:
             forbidden_users = User.objects.filter(Q(is_superuser__exact=True) | Q(id__exact=request.user.id))
             similar_terms = Term.objects.filter((Q(name__icontains=form_validator.form_data()['name']) | Q(
-                    definition__icontains=form_validator.form_data()['name'])) & ~Q(user__in=forbidden_users) & Q(
+                definition__icontains=form_validator.form_data()['name'])) & ~Q(user__in=forbidden_users) & Q(
                 public__exact=False))
             if not similar_terms or request.POST.get('confirm'):
                 new_term = Term.objects.create(date_added=datetime.now(), user=current_user,

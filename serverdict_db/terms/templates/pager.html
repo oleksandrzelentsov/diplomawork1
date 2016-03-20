@@ -1,4 +1,8 @@
 {% if pager %}
+{% if upper_count %}
+<div class="text-left">Page <b>{{pager.page_number|add:1}}/{{pager|length}}</b></div>
+<br>
+{% endif %}
 <ul class="pager">
     {% if pager.page_number != 0 %}
     <li class="previous"><a href="{{pager.urls.previous}}">Previous</a></li>
@@ -11,4 +15,8 @@
     <!--<li class="next disabled">Next</li>-->
     {% endif %}
 </ul>
+{% if lower_count %}
+<div class="text-left">Page <b>{{pager.page_number|add:1}}/{{pager|length}}</b></div>
+<br>
+{% endif %}
 {% endif %}

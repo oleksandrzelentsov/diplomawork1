@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^terms/add/$', views.add_term),
     url(r'^terms/([0-9]+)/$', views.term),
     url(r'^terms/([0-9]+)/delete/$', views.delete_term),
+    url(r'^terms/([0-9]+)/edit/$', views.edit_term),
     url(r'^terms/([0-9]+)/confirm/$', views.confirm),
     url(r'^logout/$', views.logout),
     url(r'^login/$', views.login),

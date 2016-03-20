@@ -1,4 +1,4 @@
-{% include "pager.html" %}
+{% include "pager.html" with lower_count=True %}
 {% for term in terms %}
     <div class="panel panel-default" >
         <div class="panel-body">
@@ -33,4 +33,4 @@
         </div>
     </div>
 {% endfor %}
-{% include "pager.html" %}
+{% include "pager.html" with upper_count=True %}

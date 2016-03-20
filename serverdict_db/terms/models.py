@@ -42,16 +42,20 @@ class Term(models.Model):
         self.public = True
         self.accessibility.clear()
 
-    def reset(self):
+    def reset_term(self):
         """Called when the term is edited and is losing all it's
         popularity due to updating fields."""
-        self.public = False
-        self.accessibility.clear()
-        self.accessibility.add(self.user)
+        if not self.user.is_superuser:
+            self.public = False
+            self.popularity = 0
+            self.accessibility.clear()
+            self.grant_access(self.user)
+        else:
+            self.make_public()
 
     def grant_access(self, *users):
         for user in users:
-            if user not in self.accessibility.all() and user is not self.user:
+            if user not in self.accessibility.all():
                 self.accessibility.add(user)
                 self.popularity += 1
                 if self.popularity > Term.average_popularity():

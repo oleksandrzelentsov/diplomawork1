@@ -139,12 +139,14 @@ class AddTermFormValidator(FormValidator):
             self._arguments['definition'] = self._arguments['definition'].strip()
         if 'author' in self._arguments.keys():
             try:
-                self._arguments['author'] = Author.objects.get(pk=self._arguments['author'])
+                self._arguments['author'] = Author.objects.get(pk=int(self._arguments['author']))
             except:
-                self._arguments['author'] = None
+                self._arguments['author'] = ''
+        else:
+            self._arguments['author'] = ''
         if 'category' in self._arguments.keys():
             try:
-                self._arguments['category'] = Category.objects.get(pk=self._arguments['category'])
+                self._arguments['category'] = Category.objects.get(pk=int(self._arguments['category']))
             except:
                 self._arguments['category'] = None
         if 'year' in self._arguments.keys():
@@ -171,16 +173,15 @@ class AddTermFormValidator(FormValidator):
                 self._errors.append(Alert(msg))
 
     def validate_author(self):
-        if 'author' in self._arguments.keys():
-            if not self._arguments['author']:
-                msg = Alert('<b>%s</b> Can\'t find such author.' % (get_random_magic_word()))
-                self._errors.append(msg)
+        pass
+        # if not self._arguments.get('author'):
+        #     msg = Alert('<b>%s</b> Can\'t find such author.' % (get_random_magic_word()))
+        #     # self._errors.append(msg)
 
     def validate_category(self):
-        if 'category' in self._arguments.keys():
-            if not self._arguments['category']:
-                msg = Alert('<b>%s</b> Can\'t find such category.' % (get_random_magic_word()))
-                self._errors.append(msg)
+        if not self._arguments.get('category'):
+            msg = Alert('<b>%s!</b> Can\'t find such category.' % (get_random_magic_word()))
+            self._errors.append(msg)
 
     def form_data(self):
         v = super().form_data()
