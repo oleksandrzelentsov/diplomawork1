@@ -2,7 +2,7 @@ from math import ceil
 
 
 class Pager:
-    def __init__(self, *objects, split_number=7, page_number=0):
+    def __init__(self, objects, split_number=7, page_number=0):
         self.page_number = page_number
         self.split_number = split_number
         self.objects = objects
@@ -23,9 +23,9 @@ class Pager:
             return self[(len(self) + index) % len(self)]
 
 
-class TermsPagePager(Pager):
-    def __init__(self, *objects, split_number=7, page_number=0, previous_url=None, next_url=None, current_url=None):
-        super().__init__(*objects, split_number=split_number, page_number=page_number)
+class TermsPagePager(Pager, object):
+    def __init__(self, objects, split_number=7, page_number=0, previous_url=None, next_url=None, current_url=None):
+        super(TermsPagePager, self).__init__(objects, split_number=split_number, page_number=page_number)
         if not previous_url:
             previous_url = '/terms/?page=%i' % (page_number - 1)
         if not next_url:

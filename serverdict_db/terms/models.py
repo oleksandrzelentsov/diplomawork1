@@ -36,7 +36,7 @@ class Term(models.Model):
     def __str__(self):
         return self.name + (" [%s]" % self.category)
 
-    def recalculate_publicity(self):
+    def recalculate_term_publicity(self):
         if self.popularity > Term.average_popularity():
             self.make_public()
         else:
@@ -69,8 +69,13 @@ class Term(models.Model):
             if user not in self.accessibility.all():
                 self.accessibility.add(user)
                 self.popularity += 1
-        self.recalculate_publicity()
+        Term.recalculate_publicity()
         self.save()
+
+    @staticmethod
+    def recalculate_publicity():
+        for term_ in Term.objects.all():
+            term_.recalculate_term_publicity()
 
     def forbid_access(self, *users):
         for user in users:
@@ -80,9 +85,10 @@ class Term(models.Model):
             elif user is self.user:
                 self.delete()
                 return
+        Term.recalculate_publicity()
         self.save()
 
-    def is_accessible(self, user: User):
+    def is_accessible(self, user):
         if self.public or user in self.accessibility.all() or user.is_superuser:
             return True
         else:
@@ -91,7 +97,9 @@ class Term(models.Model):
     @staticmethod
     def average_popularity(selector=lambda x: True):
         coll = [x.popularity for x in Term.objects.all() if selector(x)]
-        return (max(coll) + min(coll))/2
+        c = sum(coll), len(coll)
+        c = list(map(float, c))
+        return c[0]/c[1]
 
     @staticmethod
     def private_popularity():

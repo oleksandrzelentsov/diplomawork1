@@ -7,11 +7,11 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
 
 from serverdict_db.settings import FORM_FIELD_CLASS
-from terms.models import Term, Category, Author
-from terms.my_library.html_helper import NavigationItem, Year
-from terms.my_library.pagers import TermsPagePager
-from terms.my_library.validation import AddTermFormValidator, EditTermFormValidator
-from terms.views.misc import error, success
+from ..models import Term, Category, Author
+from ..my_library.html_helper import NavigationItem, Year
+from ..my_library.pagers import TermsPagePager
+from ..my_library.validation import AddTermFormValidator, EditTermFormValidator
+from ..views.misc import error, success
 
 
 def search(request):
@@ -55,10 +55,10 @@ def terms(request):
         if request.GET.get('page'):
             try:
                 page_number = int(request.GET.get('page'))
-            except:
+            except ValueError:
                 page_number = 0
                 print('failed setting page number')
-        pager = TermsPagePager(*terms_, page_number=page_number if page_number else 0)
+        pager = TermsPagePager(terms_, page_number=page_number if page_number else 0)
         context.update({'terms': pager.current_page(), 'pager': pager})
         return HttpResponse(get_template("bt_terms.html").render(context=context, request=request))
     else:
@@ -83,7 +83,7 @@ def edit_term(request, term_id):
     if request.method == 'GET':
         return HttpResponse(get_template(template_name).render(context=context, request=request))
     elif request.method == 'POST':
-        form_validator = EditTermFormValidator(**dict(request.POST))
+        form_validator = EditTermFormValidator(dict(request.POST))
         errors = form_validator.errors()
         if errors:
             context.update({'errors': errors})
@@ -126,8 +126,8 @@ def add_term(request):
         else:
             forbidden_users = User.objects.filter(Q(is_superuser__exact=True) | Q(id__exact=request.user.id)).distinct()
             similar_terms = Term.objects.filter((Q(name__icontains=form_validator.form_data()['name']) | Q(
-                    definition__icontains=form_validator.form_data()['name'])) & ~Q(user__in=forbidden_users) & Q(
-                    public__exact=False)).distinct()
+                    definition__icontains=form_validator.form_data()['name'])) & ~Q(
+                user__in=forbidden_users)).distinct()
             if not similar_terms or request.POST.get('confirm'):
                 new_term = Term.objects.create(date_added=datetime.now(), user=current_user,
                                                **form_validator.form_data())

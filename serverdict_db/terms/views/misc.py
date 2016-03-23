@@ -1,24 +1,26 @@
+from time import time
+
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
+from htmlmin.decorators import not_minified_response
 
 from serverdict_db.settings import FORM_FIELD_CLASS
-from terms.models import Term
-from terms.my_library.charts import TermsCountByCategoryChart, TermsPopularityChart
-from terms.my_library.html_helper import NavigationItem, Alert
+from ..models import Term
+from ..my_library.charts import TermsCountByCategoryChart, TermsPopularityChart
+from ..my_library.html_helper import NavigationItem, Alert
 
 
-def error(request, message: str, redirect=None):
+def error(request, message, redirect=None):
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
     return HttpResponse(get_template('bt_error.html').render(
-            context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
-                     'field_class': FORM_FIELD_CLASS, 'current_user': current_user, 'title': 'Error'},
-            request=request))
+        context={'alert': Alert(message), 'redirect': redirect, 'navigation_items': nav,
+                 'field_class': FORM_FIELD_CLASS, 'current_user': current_user, 'title': 'Error'}, request=request))
 
 
-def success(request, message: str, redirect=None):
+def success(request, message, redirect=None):
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
     context = {'alert': Alert(message, 'success'),
@@ -34,7 +36,9 @@ def index(request):
     return HttpResponseRedirect('/terms')
 
 
+@not_minified_response
 def statistics(request):
+    everything = time()
     template_name = 'bt_statistics.html'
     nav = NavigationItem.get_navigation(request, -1)
     current_user = request.user
@@ -44,4 +48,18 @@ def statistics(request):
     chart_popularity = TermsPopularityChart(Term.get_terms(request.user).filter(~Q(user__in=super_users)).distinct())
     plot_ += chart_popularity.get_plot()
     context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot_}
-    return HttpResponse(get_template(template_name).render(request=request, context=context))
+    everything = time() - everything
+    print 'stats method: ', everything
+    everything = time()
+    t = get_template(template_name)
+    everything = time() - everything
+    print 'template getting:', everything
+    everything = time()
+    c = t.render(request=request, context=context)
+    everything = time() - everything
+    print 'template rendering:', everything
+    everything = time()
+    h = HttpResponse(c)
+    everything = time() - everything
+    print 'httpresponse preparing:', everything
+    return h

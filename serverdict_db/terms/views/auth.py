@@ -5,9 +5,9 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.template.loader import get_template
 
 from serverdict_db.settings import FORM_FIELD_CLASS
-from terms.my_library.html_helper import NavigationItem
-from terms.my_library.validation import LoginFormValidator, RegisterFormValidator
-from terms.views.misc import success, error
+from ..my_library.html_helper import NavigationItem
+from ..my_library.validation import LoginFormValidator, RegisterFormValidator
+from ..views.misc import success, error
 
 
 def login(request):
@@ -58,7 +58,7 @@ def register(request):
         # collect parameters
         form_data = dict(request.POST)
         # validate
-        form_validator = RegisterFormValidator(**form_data)
+        form_validator = RegisterFormValidator(form_data)
         # get errors
         errors = form_validator.errors()
         # if there are any errors, return the same page with them

@@ -1,11 +1,7 @@
+import random
 from datetime import datetime
 
 from django.contrib.auth.models import AnonymousUser
-from math import ceil
-from plotly import offline
-import random
-
-from terms.models import Category
 
 magic_words = ['Ugh', 'Shucks', 'Damn', 'Oh', 'Dammit', 'Heck', 'Oh my gosh', 'Holy cow', 'Whoa', 'Whaat?']
 random.shuffle(magic_words)

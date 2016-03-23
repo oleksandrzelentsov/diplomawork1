@@ -16,7 +16,7 @@ class FormValidator:
     def __str__(self):
         return str(self.form_data())
 
-    def __init__(self, remove_lists=True, **validation_kwargs):
+    def __init__(self, validation_kwargs, remove_lists=True):
         self._arguments = validation_kwargs
         self._errors = []
         if remove_lists:
@@ -74,9 +74,9 @@ class FormValidator:
             self._arguments['last_name'] = self._arguments['last_name'].strip().capitalize()
 
 
-class RegisterFormValidator(FormValidator):
+class RegisterFormValidator(FormValidator, object):
     def validate_email(self):
-        super().validate_email()
+        super(RegisterFormValidator, self).validate_email()
         if 'email' in self._arguments.keys():
             if self._arguments['email'] in [x.email for x in User.objects.all()]:
                 self._errors.append(
@@ -84,7 +84,7 @@ class RegisterFormValidator(FormValidator):
                             get_random_magic_word(), self._arguments['email'])))
 
     def validate_username(self):
-        super().validate_username()
+        super(RegisterFormValidator, self).validate_username()
         if 'username' in self._arguments.keys():
             if self._arguments['username'] in [x.username for x in User.objects.all()]:
                 self._errors.append(
@@ -97,13 +97,13 @@ class RegisterFormValidator(FormValidator):
             self._arguments['email'])
         if '' in necessary_parameters:
             self._errors.append(Alert('<b>%s!</b> Some of necessary fields left empty.' % get_random_magic_word()))
-        super().errors()
+        super(RegisterFormValidator, self).errors()
         return self._errors
 
 
-class LoginFormValidator(FormValidator):
-    def __init__(self, **validation_kwargs):
-        super().__init__(remove_lists=True, **validation_kwargs)
+class LoginFormValidator(FormValidator, object):
+    def __init__(self, validation_kwargs):
+        super(LoginFormValidator, self).__init__(validation_kwargs, remove_lists=True)
         self._arguments['user'] = authenticate(username=self.form_data()['username'],
                                                password=self.form_data()['password'])
 
@@ -121,12 +121,12 @@ class LoginFormValidator(FormValidator):
             self._errors.append(msg)
 
     def errors(self):
-        super().errors()
+        super(LoginFormValidator, self).errors()
         self.validate_user()
         return self._errors
 
 
-class AddTermFormValidator(FormValidator):
+class AddTermFormValidator(FormValidator, object):
     max_term_name_length = 128
     min_term_name_length = 2
     max_definition_length = 500
@@ -185,7 +185,7 @@ class AddTermFormValidator(FormValidator):
             self._errors.append(msg)
 
     def form_data(self):
-        v = super().form_data()
+        v = super(AddTermFormValidator, self).form_data()
         if 'confirm' in v.keys():
             del v['confirm']
         return v
@@ -198,6 +198,7 @@ class AddTermFormValidator(FormValidator):
 
 
 class EditTermFormValidator(AddTermFormValidator):
+
     def format_args(self):
         print('formatting arguments')
         if 'name' in self._arguments.keys():
