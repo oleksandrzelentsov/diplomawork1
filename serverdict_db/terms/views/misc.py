@@ -41,7 +41,7 @@ def statistics(request):
     super_users = User.objects.filter(is_superuser__exact=True)
     chart_by_category = TermsCountByCategoryChart(Term.get_terms(request.user))
     plot_ = chart_by_category.get_plot()
-    chart_popularity = TermsPopularityChart(Term.get_terms(request.user).filter(~Q(user__in=super_users)))
+    chart_popularity = TermsPopularityChart(Term.get_terms(request.user).filter(~Q(user__in=super_users)).distinct())
     plot_ += chart_popularity.get_plot()
     context = {'navigation_items': nav, 'current_user': current_user, 'plot': plot_}
     return HttpResponse(get_template(template_name).render(request=request, context=context))

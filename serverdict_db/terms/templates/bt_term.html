@@ -128,13 +128,15 @@
                     <h4>Visibility<br><small>Who is this term visible to.</small></h4>
                 </td>
                 <td class="lead text-right text-info">
+                    {% if term.public %}
+                    <div class="text-success">Public</div>
+                    {% else %}
                     <ul class="list-inline">
                     {% for user in term.accessibility.all %}
-                        <li>{{ user.first_name }} {{ user.last_name }}</li>
-                    {% empty %}
-                        <div class="text-success">Public</div>
+                        <li>{{ user.first_name }} {{ user.last_name }},</li>
                     {% endfor %}
                     </ul>
+                    {% endif %}
                 </td>
             </tr>
         </tbody>

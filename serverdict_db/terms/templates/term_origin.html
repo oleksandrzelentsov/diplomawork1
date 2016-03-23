@@ -1,7 +1,19 @@
 <h3>
-{% if not user.is_superuser %}
-<span class="label label-info">User-defined</span>
+<!--{% if not user.is_superuser %}-->
+<!--<span class="label label-info">User-defined</span>-->
+<!--{% else %}-->
+<!--<span class="label label-primary"><i>Voter</i> choice</span>-->
+<!--{% endif %}-->
+<!--<br>-->
+<!--<br>-->
+{% if term.user == current_user %}
+<span class="text-primary glyphicon glyphicon-user"></span>
+{% elif not term.user.is_superuser %}
+<span class="glyphicon glyphicon-user"></span>
+{% endif %}
+{% if not term.public %}
+<span class="text-danger glyphicon glyphicon-eye-close"></span>
 {% else %}
-<span class="label label-primary"><i>Voter</i> choice</span>
+<span class="glyphicon glyphicon-eye-open"></span>
 {% endif %}
 </h3>

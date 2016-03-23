@@ -18,7 +18,8 @@ def search(request):
     # TODO create filters of "my terms", "user-defined terms" and "Voter choice terms"
     nav = NavigationItem.get_navigation(request)
     current_user = request.user
-    context = {'terms': Term.get_terms(request.user), 'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
+    context = {'terms': Term.get_terms(request.user).distinct(), 'navigation_items': nav,
+               'field_class': FORM_FIELD_CLASS,
                'current_user': current_user}
     if request.method == 'GET':
         name = request.GET.get('name')
@@ -30,13 +31,14 @@ def search(request):
             context.update({'categories': categories})
             if name:
                 context.update({'name': name})
-                context.update({'terms': Term.objects.filter(
+                context.update({'terms': context['terms'].filter(
                         Q(name__icontains=context['name'].lower()) | Q(definition__icontains=context['name'].lower()))})
             if category:
                 context.update({'category': int(category)})
                 context.update({'terms': context['terms'].filter(
                         Q(category__exact=Category.objects.get(pk=context['category'])))})
-            context.update({'terms': context['terms'].filter((Q(public__exact=True) | Q(accessibility__in=[current_user.id])))})
+            context.update({'terms': context['terms'].filter(
+                    (Q(public__exact=True) | Q(accessibility__in=[current_user.id])))})
         return HttpResponse(get_template('bt_search.html').render(context=context, request=request))
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
@@ -48,7 +50,7 @@ def terms(request):
     context = {'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user}
     if request.method == 'GET':
-        terms_ = Term.get_terms(request.user).order_by('-date_added')
+        terms_ = Term.get_terms(current_user).order_by('-date_added').distinct()
         page_number = None
         if request.GET.get('page'):
             try:
@@ -122,10 +124,10 @@ def add_term(request):
             context.update({'errors': errors})
             return HttpResponse(get_template(template_name).render(context=context, request=request))
         else:
-            forbidden_users = User.objects.filter(Q(is_superuser__exact=True) | Q(id__exact=request.user.id))
+            forbidden_users = User.objects.filter(Q(is_superuser__exact=True) | Q(id__exact=request.user.id)).distinct()
             similar_terms = Term.objects.filter((Q(name__icontains=form_validator.form_data()['name']) | Q(
                     definition__icontains=form_validator.form_data()['name'])) & ~Q(user__in=forbidden_users) & Q(
-                    public__exact=False))
+                    public__exact=False)).distinct()
             if not similar_terms or request.POST.get('confirm'):
                 new_term = Term.objects.create(date_added=datetime.now(), user=current_user,
                                                **form_validator.form_data())

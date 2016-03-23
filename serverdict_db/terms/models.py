@@ -105,7 +105,7 @@ class Term(models.Model):
     def get_terms(user):
         if user.is_superuser:
             return Term.objects.all()
-        result = Term.objects.filter(Q(public__exact=True) | Q(accessibility__in=[user.id]))
+        result = Term.objects.filter(Q(public__exact=True) | Q(public__exact=False, accessibility__in=[user.id]))
         return result
 
 
