@@ -10,6 +10,9 @@
                         </a>
                         <br>
                         <small>
+                            {% if short_definition %}
+                            - {{ term.definition }}<br>
+                            {% endif %}
                             <a class="text text-muted" href="/search/?category={{term.category.id}}">
                                 {{ term.category }}
                             </a>

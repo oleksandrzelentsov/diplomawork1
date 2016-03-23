@@ -37,7 +37,7 @@ class Term(models.Model):
         return self.name + (" [%s]" % self.category)
 
     def recalculate_term_publicity(self):
-        if self.popularity > Term.average_popularity():
+        if self.popularity > Term.average_popularity() or self.user.is_superuser:
             self.make_public()
         else:
             self.make_private()
@@ -60,7 +60,7 @@ class Term(models.Model):
             self.popularity = 0
             self.accessibility.clear()
             self.grant_access(self.user)
-            self.recalculate_publicity()
+            self.recalculate_term_publicity()
         else:
             self.make_public()
 

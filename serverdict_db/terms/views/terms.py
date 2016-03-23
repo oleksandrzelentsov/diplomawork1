@@ -118,7 +118,7 @@ def add_term(request):
     if request.method == 'GET':
         return HttpResponse(get_template(template_name).render(context=context, request=request))
     elif request.method == 'POST':
-        form_validator = AddTermFormValidator(**dict(request.POST))
+        form_validator = AddTermFormValidator(dict(request.POST))
         errors = form_validator.errors()
         if errors:
             context.update({'errors': errors})
@@ -136,6 +136,7 @@ def add_term(request):
                 else:
                     new_term.accessibility.add(current_user)
                 new_term.save()
+                Term.recalculate_publicity()
                 return success(request, '<h3>Success</h3>creating term.<br>Page will redirect in 3 seconds.',
                                redirect={'url': '/', 'time': 3})
             else:
@@ -180,6 +181,7 @@ def delete_term(request, term_id):
     elif request.method == 'POST':
         if term_:
             term_.delete()
+            Term.recalculate_publicity()
             return success(request, 'You have deleted your term!', {'time': 3, 'url': '/'})
 
 
