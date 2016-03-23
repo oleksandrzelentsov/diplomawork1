@@ -23,7 +23,7 @@ def login(request):
                         context=context,
                         request=request))
     elif request.method == 'POST':
-        form_validator = LoginFormValidator(**dict(request.POST))
+        form_validator = LoginFormValidator(dict(request.POST))
         errors = form_validator.errors()
         current_user = request.user
         if errors:
