@@ -1,14 +1,14 @@
 from math import ceil
 
 
-class Pager:
+class Pager(object):
     def __init__(self, objects, split_number=7, page_number=0):
         self.page_number = page_number
         self.split_number = split_number
         self.objects = objects
 
     def __len__(self):
-        return ceil(len(self.objects) / self.split_number)
+        return ceil(float(len(self.objects)) / float(self.split_number))
 
     def current_page(self):
         return self[self.page_number]
@@ -23,7 +23,7 @@ class Pager:
             return self[(len(self) + index) % len(self)]
 
 
-class TermsPagePager(Pager, object):
+class TermsPagePager(Pager):
     def __init__(self, objects, split_number=7, page_number=0, previous_url=None, next_url=None, current_url=None):
         super(TermsPagePager, self).__init__(objects, split_number=split_number, page_number=page_number)
         if not previous_url:

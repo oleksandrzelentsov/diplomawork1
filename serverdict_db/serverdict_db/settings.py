@@ -49,8 +49,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'htmlmin.middleware.HtmlMinifyMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
+    # 'htmlmin.middleware.HtmlMinifyMiddleware',
+    # 'htmlmin.middleware.MarkRequestMiddleware',
 )
 
 ROOT_URLCONF = 'serverdict_db.urls'
@@ -109,7 +109,7 @@ STATIC_URL = '/static/'
 
 # Custom settings
 
-HTML_MINIFY = True
+# HTML_MINIFY = True
 
 ADMIN_EMAIL = 'oleksandrzelentsov@gmail.com'
 

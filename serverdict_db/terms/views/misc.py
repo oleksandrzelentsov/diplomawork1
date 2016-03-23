@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import get_template
-from htmlmin.decorators import not_minified_response
 
 from serverdict_db.settings import FORM_FIELD_CLASS
 from ..models import Term
@@ -36,7 +35,6 @@ def index(request):
     return HttpResponseRedirect('/terms')
 
 
-@not_minified_response
 def statistics(request):
     everything = time()
     template_name = 'bt_statistics.html'
