@@ -45,7 +45,7 @@ def search(request):
 
 
 def terms(request):
-    nav = NavigationItem.get_navigation(request, 0)
+    nav = NavigationItem.get_navigation(request, active_index=0)
     current_user = request.user
     context = {'navigation_items': nav, 'field_class': FORM_FIELD_CLASS,
                'current_user': current_user}

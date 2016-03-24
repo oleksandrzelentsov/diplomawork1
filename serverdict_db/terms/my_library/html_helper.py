@@ -18,6 +18,9 @@ class NavigationItem:
     def __init__(self, text, href, active=False):
         self.text, self.href, self.active = text, href, active
 
+    def __str__(self):
+        return ', '.join(tuple(map(str, (self.text, self.href, self.active))))
+
     @staticmethod
     def get_navigation(request, active_index=None):
         nav = [NavigationItem('<span class="glyphicon glyphicon-home"></span> Home', '/terms')]
@@ -30,8 +33,10 @@ class NavigationItem:
             if request.user.is_staff:
                 nav += [NavigationItem('<span class="glyphicon glyphicon-wrench"></span> Administration', '/admin')]
         nav += [NavigationItem('<span class="glyphicon glyphicon-stats"></span> Statistics', '/statistics/')]
-        if active_index:
+        if active_index or active_index == 0:
             nav[active_index].active = True
+        print 'nav:'
+        for i in nav: print i
         return nav
 
 
