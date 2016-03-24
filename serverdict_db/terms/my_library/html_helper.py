@@ -35,8 +35,8 @@ class NavigationItem:
         nav += [NavigationItem('<span class="glyphicon glyphicon-stats"></span> Statistics', '/statistics/')]
         if active_index or active_index == 0:
             nav[active_index].active = True
-        print 'nav:'
-        for i in nav: print i
+        # print 'nav:'
+        # for i in nav: print i
         return nav
 
 
