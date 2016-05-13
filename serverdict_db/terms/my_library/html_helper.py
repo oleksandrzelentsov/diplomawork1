@@ -31,7 +31,7 @@ class NavigationItem:
             nav += [NavigationItem('<span class="glyphicon glyphicon-menu-left"></span> Log out', '/logout/'),
                     NavigationItem('<span class="glyphicon glyphicon-plus"></span> Add term', '/terms/add')]
             if request.user.is_staff:
-                nav += [NavigationItem('<span class="glyphicon glyphicon-wrench"></span> Administration', '/admin')]
+                nav += [NavigationItem('<span class="glyphicon glyphicon-wrench"></span> Administration', '/customadmin')]
         nav += [NavigationItem('<span class="glyphicon glyphicon-stats"></span> Statistics', '/statistics/')]
         if active_index or active_index == 0:
             nav[active_index].active = True

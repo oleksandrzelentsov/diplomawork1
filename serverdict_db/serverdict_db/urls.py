@@ -20,6 +20,7 @@ from terms.views import misc, terms, auth
 urlpatterns = [
     url(r'^$', misc.index),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^customadmin/', terms.custom_admin),
     url(r'^terms/$', terms.terms),
     url(r'^search/', terms.search),
     url(r'^terms/add/$', terms.add_term),

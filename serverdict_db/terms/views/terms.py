@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -195,3 +196,22 @@ def confirm_term(request, term_id):
         return success(request, 'Term successfully confirmed!', redirect={'url': '/terms/%s/' % term_id, 'time': 3})
     else:
         return error(request, '%s method is not allowed for this page' % request.method)
+
+
+@staff_member_required
+def custom_admin(request):
+    if request.method != 'GET':
+        return error(request, '%s method is not allowed for this page' % request.method)
+    actions = {'recalc': lambda: Term.recalculate_publicity()}
+    action_name = request.GET.get('action')
+    if not action_name:
+        template_name = 'bt_admin_settings.html'
+        navigation_items = NavigationItem.get_navigation(request)
+        context = {'navigation_items': navigation_items, 'current_user': request.user}
+        return HttpResponse(get_template(template_name).render(request=request, context=context))
+    func = actions.get(action_name)
+    if func:
+        func()
+        return success(request, 'action ran successfully')
+    else:
+        return error(request, 'action \'{}\' does not exist'.format(action_name))
